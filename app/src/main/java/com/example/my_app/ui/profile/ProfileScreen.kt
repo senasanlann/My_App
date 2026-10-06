@@ -1,9 +1,20 @@
 package com.example.my_app.ui.profile
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 
 @Composable
 fun ProfileScreen() {
-    Text(text = "Profile Ekranı")
+    Scaffold { innerPadding ->
+        Text(
+            text = "Profile Ekranı (henüz boş)",
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        )
+    }
 }

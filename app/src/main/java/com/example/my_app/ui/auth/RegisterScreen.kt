@@ -29,18 +29,32 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.my_app.GorevlerimApp
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.ui.unit.dp
+import android.widget.Toast
+import androidx.compose.runtime.LaunchedEffect
 
 @Composable
 fun RegisterScreen(
     onNavigateBack: () -> Unit,
     viewModel: RegisterViewModel = viewModel(
         factory = RegisterViewModelFactory(
-            (LocalContext.current.applicationContext as GorevlerimApp).container.userRepository
+            (LocalContext.current.applicationContext as GorevlerimApp).container.authRepository
         )
     )
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var passwordVisible by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+
+    LaunchedEffect(uiState.isSuccess) {
+        if (uiState.isSuccess) {
+            Toast.makeText(context, "Kayıt başarılı", Toast.LENGTH_SHORT).show()
+            onNavigateBack()
+        }
+    }
 
     Scaffold { innerPadding ->
         Column(
@@ -117,13 +131,26 @@ fun RegisterScreen(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 modifier = Modifier.fillMaxWidth()
             )
-
+            if (uiState.generalError != null) {
+                Text(
+                    text = uiState.generalError!!,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
 
             Button(
                 onClick = { viewModel.onRegisterClick() },
+                enabled = !uiState.isLoading,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Kayıt Ol")
+                if (uiState.isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(20.dp),
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                } else {
+                    Text("Kayıt Ol")
+                }
             }
             TextButton(onClick = onNavigateBack) {
                 Text("Zaten hesabın var mı? Giriş yap")

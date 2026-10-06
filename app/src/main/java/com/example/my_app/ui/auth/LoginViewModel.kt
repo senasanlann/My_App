@@ -2,23 +2,23 @@ package com.example.my_app.ui.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
 import com.example.my_app.data.repository.AuthRepository
-import com.example.my_app.util.HashUtils
-import com.example.my_app.util.Validators
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import com.example.my_app.util.Validators
+import androidx.lifecycle.viewModelScope
+import com.example.my_app.util.HashUtils
 import kotlinx.coroutines.launch
+import com.example.my_app.data.session.SessionManager
 
-class RegisterViewModel(private val authRepository: AuthRepository) : ViewModel() {
+class LoginViewModel(
+    private val authRepository: AuthRepository,
+    private val sessionManager: SessionManager
+) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(RegisterUiState())
-    val uiState: StateFlow<RegisterUiState> = _uiState.asStateFlow()
-
-    fun onNameChange(newName: String) {
-        _uiState.value = _uiState.value.copy(name = newName, nameError = null)
-    }
+    private val _uiState = MutableStateFlow(LoginUiState())
+    val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
     fun onEmailChange(newEmail: String) {
         _uiState.value = _uiState.value.copy(email = newEmail, emailError = null)
@@ -28,33 +28,21 @@ class RegisterViewModel(private val authRepository: AuthRepository) : ViewModel(
         _uiState.value = _uiState.value.copy(password = newPassword, passwordError = null)
     }
 
-    fun onConfirmPasswordChange(newConfirmPassword: String) {
-        _uiState.value = _uiState.value.copy(confirmPassword = newConfirmPassword, confirmPasswordError = null)
-    }
-
     fun validateForm(): Boolean {
         val currentState = _uiState.value
 
-        val nameError = Validators.validateName(currentState.name)
         val emailError = Validators.validateEmail(currentState.email)
-        val passwordError = Validators.validatePassword(currentState.password)
-        val confirmPasswordError = Validators.validateConfirmPassword(
-            currentState.password,
-            currentState.confirmPassword
-        )
+        val passwordError = if (currentState.password.isBlank()) "Şifre boş olamaz" else null
 
         _uiState.value = currentState.copy(
-            nameError = nameError,
             emailError = emailError,
-            passwordError = passwordError,
-            confirmPasswordError = confirmPasswordError
+            passwordError = passwordError
         )
 
-        return nameError == null && emailError == null &&
-                passwordError == null && confirmPasswordError == null
+        return emailError == null && passwordError == null
     }
 
-    fun onRegisterClick() {
+    fun onLoginClick() {
         val isValid = validateForm()
         if (!isValid) {
             return
@@ -64,14 +52,14 @@ class RegisterViewModel(private val authRepository: AuthRepository) : ViewModel(
 
         viewModelScope.launch {
             val passwordHash = HashUtils.sha256(_uiState.value.password)
-            val result = authRepository.register(
-                name = _uiState.value.name,
+            val result = authRepository.login(
                 email = _uiState.value.email,
                 passwordHash = passwordHash
             )
 
             result
-                .onSuccess {
+                .onSuccess { user ->
+                    sessionManager.saveSession(user.id, user.name, user.email)
                     _uiState.value = _uiState.value.copy(isLoading = false, isSuccess = true)
                 }
                 .onFailure { error ->
@@ -84,11 +72,12 @@ class RegisterViewModel(private val authRepository: AuthRepository) : ViewModel(
     }
 }
 
-class RegisterViewModelFactory(
-    private val authRepository: AuthRepository
+class LoginViewModelFactory(
+    private val authRepository: AuthRepository,
+    private val sessionManager: SessionManager
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
-        return RegisterViewModel(authRepository) as T
+        return LoginViewModel(authRepository, sessionManager) as T
     }
 }

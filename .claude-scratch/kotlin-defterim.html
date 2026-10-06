@@ -1,0 +1,945 @@
+<title>Kotlin Defterim</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap">
+<style>
+  :root{
+    --bg:#FAFAFC;
+    --surface:#FFFFFF;
+    --surface-alt:#F2EEFC;
+    --border:#E4DFF4;
+    --text:#1D1B29;
+    --text-muted:#5B5770;
+    --accent:#7F52FF;
+    --accent-ink:#5B2FE0;
+    --accent-soft:#EFE8FF;
+    --code-bg:#F5F3FC;
+    --code-border:#DCD4F5;
+    --done:#1E8E5A;
+    --warn:#B5750F;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#131020;
+      --surface:#1B1729;
+      --surface-alt:#211C34;
+      --border:#332C4C;
+      --text:#F1EEFB;
+      --text-muted:#AFA6CC;
+      --accent:#B199FF;
+      --accent-ink:#D2C2FF;
+      --accent-soft:#2A2244;
+      --code-bg:#1E1A30;
+      --code-border:#3A3256;
+      --done:#4FD492;
+      --warn:#E3AE4E;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#131020;
+    --surface:#1B1729;
+    --surface-alt:#211C34;
+    --border:#332C4C;
+    --text:#F1EEFB;
+    --text-muted:#AFA6CC;
+    --accent:#B199FF;
+    --accent-ink:#D2C2FF;
+    --accent-soft:#2A2244;
+    --code-bg:#1E1A30;
+    --code-border:#3A3256;
+    --done:#4FD492;
+    --warn:#E3AE4E;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:"IBM Plex Sans",system-ui,sans-serif;
+    line-height:1.6;
+    padding-inline:20px;
+  }
+  .wrap{max-width:820px;margin:0 auto;}
+
+  code, .mono{font-family:"IBM Plex Mono",ui-monospace,monospace;}
+
+  /* ---- top nav ---- */
+  .topbar{
+    position:sticky; top:0; z-index:10;
+    background:color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--border);
+    padding-block:14px;
+    margin-inline:-20px;
+    padding-inline:20px;
+  }
+  .topbar-inner{max-width:820px;margin:0 auto;display:flex;align-items:center;gap:14px;}
+  .brand{display:flex;align-items:baseline;gap:8px;flex-shrink:0;}
+  .brand-mark{
+    width:26px;height:26px;border-radius:7px;background:var(--accent);
+    display:inline-flex;align-items:center;justify-content:center;
+    color:var(--surface);font-family:"IBM Plex Mono";font-weight:700;font-size:13px;
+    flex-shrink:0;
+  }
+  .brand-name{font-weight:600;font-size:14.5px;white-space:nowrap;}
+  .nav-chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;}
+  .nav-chips::-webkit-scrollbar{display:none;}
+  .nav-chips a{
+    flex-shrink:0;
+    font-family:"IBM Plex Mono";font-size:12px;font-weight:500;
+    color:var(--text-muted);
+    text-decoration:none;
+    border:1px solid var(--border);
+    border-radius:999px;
+    padding:5px 11px;
+    transition:background .15s, color .15s, border-color .15s;
+  }
+  .nav-chips a:hover{color:var(--accent-ink);border-color:var(--accent);background:var(--accent-soft);}
+
+  /* ---- intro ---- */
+  .intro{padding-block:40px 20px;}
+  h1.title{
+    font-size:clamp(28px,5vw,38px);
+    font-weight:700;
+    letter-spacing:-0.01em;
+    text-wrap:balance;
+    margin:0 0 10px;
+  }
+  .intro p{color:var(--text-muted);font-size:15.5px;max-width:62ch;margin:0;}
+
+  /* ---- stage sections ---- */
+  section.stage{padding-block:38px;border-top:1px solid var(--border);scroll-margin-top:72px;}
+  .stage-head{display:flex;gap:16px;align-items:flex-start;margin-bottom:6px;}
+  .stage-num{
+    font-family:"IBM Plex Mono";font-weight:700;font-size:15px;
+    color:var(--accent);
+    background:var(--accent-soft);
+    border-radius:8px;
+    padding:6px 10px;
+    flex-shrink:0;
+    line-height:1;
+  }
+  h2.stage-title{font-size:21px;font-weight:700;margin:4px 0 4px;text-wrap:balance;}
+  .stage-sub{
+    color:var(--text-muted);font-size:13.5px;
+    font-style:normal;
+  }
+  .stage-sub b{color:var(--text);font-weight:600;}
+
+  .note{
+    margin-top:16px;
+    background:var(--surface-alt);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:12px 16px;
+    font-size:13.5px;
+    color:var(--text-muted);
+  }
+  .note b{color:var(--text);}
+
+  /* ---- term list ---- */
+  .terms{margin-top:20px;display:flex;flex-direction:column;gap:0;}
+  .term{
+    padding-block:14px;
+    border-bottom:1px solid var(--border);
+  }
+  .term:last-child{border-bottom:none;}
+  .term-name{
+    font-family:"IBM Plex Mono";font-weight:600;font-size:13.5px;
+    color:var(--accent-ink);
+    background:var(--code-bg);
+    border:1px solid var(--code-border);
+    border-radius:6px;
+    padding:2px 7px;
+    display:inline-block;
+    margin-bottom:6px;
+  }
+  .term-def{font-size:14.5px;color:var(--text);max-width:68ch;}
+  .term-why{font-size:13px;color:var(--text-muted);margin-top:5px;}
+  .term-why b{color:var(--text-muted);font-weight:600;}
+
+  /* ---- code blocks ---- */
+  pre{
+    margin:14px 0 0;
+    background:var(--code-bg);
+    border:1px solid var(--code-border);
+    border-left:3px solid var(--accent);
+    border-radius:8px;
+    padding:14px 16px;
+    overflow-x:auto;
+    font-size:12.8px;
+    line-height:1.55;
+  }
+  pre code{font-family:"IBM Plex Mono";color:var(--text);white-space:pre;}
+  .code-label{
+    font-family:"IBM Plex Mono";font-size:11px;font-weight:600;
+    color:var(--text-muted);
+    letter-spacing:.04em;text-transform:uppercase;
+    margin-top:16px;margin-bottom:-4px;
+    display:block;
+  }
+
+  /* ---- appendix ---- */
+  .appendix-tag{
+    font-family:"IBM Plex Mono";font-size:11px;font-weight:600;
+    letter-spacing:.06em;text-transform:uppercase;
+    color:var(--warn);
+    background:color-mix(in srgb, var(--warn) 14%, transparent);
+    border-radius:999px;
+    padding:4px 10px;
+    display:inline-block;
+    margin-bottom:10px;
+  }
+
+  footer{
+    border-top:1px solid var(--border);
+    padding-block:28px 44px;
+    color:var(--text-muted);
+    font-size:13px;
+    text-align:center;
+  }
+
+  @media (max-width:520px){
+    .brand-name{display:none;}
+    .stage-num{font-size:13px;padding:5px 8px;}
+  }
+</style>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="brand-mark">K</span>
+      <span class="brand-name">Kotlin Defterim</span>
+    </div>
+    <nav class="nav-chips">
+      <a href="#asama-1">1. Kurulum</a>
+      <a href="#asama-2">2. Modeller</a>
+      <a href="#asama-3">3. Veritabanı</a>
+      <a href="#asama-4">4. Navigation</a>
+      <a href="#asama-5">5. Arayüz</a>
+      <a href="#asama-6">6. ViewModel</a>
+      <a href="#asama-7">7. Doğrulama</a>
+      <a href="#asama-8">8. Repository</a>
+      <a href="#asama-9">9. Giriş</a>
+      <a href="#asama-10">10. Oturum</a>
+      <a href="#asama-11">11. Splash</a>
+      <a href="#asama-12">12. Alt Menü</a>
+      <a href="#ek-a">Ek A</a>
+      <a href="#ek-b">Ek B</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="intro">
+    <h1 class="title">Kotlin Defterim</h1>
+    <p>Görevlerim uygulamasını baştan kurarken öğrendiğim her Kotlin ve Android Compose kavramı, aşama aşama. Her terim: ne olduğu, nasıl kullanıldığı ve neden o şekilde yazıldığı. 1. Aşama'dan şu an içinde bulunduğumuz 12. Aşama'ya kadar.</p>
+  </div>
+
+  <!-- ================= AŞAMA 1 ================= -->
+  <section class="stage" id="asama-1">
+    <div class="stage-head">
+      <span class="stage-num">01</span>
+      <div>
+        <h2 class="stage-title">Proje Kurulumu</h2>
+        <div class="stage-sub">Öğrendiğin: <b>Version Catalog, Gradle eklentileri, KSP, Room/DataStore farkı</b></div>
+      </div>
+    </div>
+
+    <div class="terms">
+      <div class="term">
+        <div class="term-name">libs.versions.toml</div>
+        <div class="term-def">Projedeki tüm kütüphane versiyonlarını tek yerde toplayan dosya. <code>[versions]</code> versiyon numaralarını, <code>[libraries]</code> kütüphaneleri, <code>[plugins]</code> eklentileri tanımlar. Tire (<code>-</code>) ile yazılan isimler, kodda nokta (<code>.</code>) ile erişilir: <code>androidx-core-ktx</code> → <code>libs.androidx.core.ktx</code>.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">apply false</div>
+        <div class="term-def">Kök <code>build.gradle.kts</code>'de bir eklentiyi <code>apply false</code> ile yazmak, "bu eklenti projede mevcut ama henüz hiçbir modülde aktif değil" demektir. Gerçek kullanım, modülün kendi <code>build.gradle.kts</code>'inde <code>apply false</code> yazmadan yapılır.</div>
+        <div class="term-why"><b>Benzetme:</b> kök dosya bir kütüphane rafı ("bunlar mevcut"), modül dosyası senin masan ("bunu gerçekten kullanıyorum").</div>
+      </div>
+      <div class="term">
+        <div class="term-name">KSP (Kotlin Symbol Processing)</div>
+        <div class="term-def">Kodundaki <code>@Entity</code>, <code>@Dao</code> gibi etiketleri (annotation) derleme sırasında tarayıp, arkasında gerçek çalışan kodu otomatik üreten araç. Room'un SQL'i senin yerine yazmasını sağlayan şey budur.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Room vs DataStore</div>
+        <div class="term-def"><b>Room</b>: çoklu kayıt, tablo yapısı, güçlü sorgu (arama/filtre/sıralama) gerektiren veriler için (kullanıcılar, görevler). <b>DataStore</b>: tek, basit anahtar-değer bilgisi için (örn. "oturum açık mı, hangi kullanıcı").</div>
+      </div>
+      <div class="term">
+        <div class="term-name">material-icons-extended</div>
+        <div class="term-def">Compose BOM ailesinden olduğu için <code>version.ref</code> gerektirmeyen tek kütüphane örneklerinden biri — versiyonu zaten <code>compose-bom</code>'dan geliyor.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Paket yapısı (data / ui / model / navigation / util)</div>
+        <div class="term-def">Kodu işlevine göre klasörlere ayırmak. <code>data</code>: veritabanı/repository, <code>ui</code>: ekranlar, <code>model</code>: sabit veri tipleri (enum'lar), <code>navigation</code>: ekran geçişleri, <code>util</code>: tekrar kullanılan yardımcı fonksiyonlar.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AŞAMA 2 ================= -->
+  <section class="stage" id="asama-2">
+    <div class="stage-head">
+      <span class="stage-num">02</span>
+      <div>
+        <h2 class="stage-title">Veri Modelleri</h2>
+        <div class="stage-sub">Öğrendiğin: <b>enum class, enum'a özellik eklemek, data class, annotation'lar</b></div>
+      </div>
+    </div>
+
+    <div class="terms">
+      <div class="term">
+        <div class="term-name">enum class</div>
+        <div class="term-def">Sabit, önceden belirli birkaç seçenekten biri olabilen tip (örn. bir görev sadece TODO/IN_PROGRESS/DONE olabilir, başka bir şey olamaz). Düz <code>String</code> kullanmaktan farkı: yazım hatası derleme anında yakalanır.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">enum'a özellik eklemek</div>
+        <div class="term-def">Her enum değerinin kendi ek verileri (yazı, renk, sayı) olabilir — tıpkı bir class constructor'ı gibi.</div>
+      </div>
+      <pre><code>enum class TaskPriority(val displayName: String, val level: Int) {
+    LOW(displayName = "Düşük", level = 1),
+    HIGH(displayName = "Yüksek", level = 3)
+}</code></pre>
+      <div class="term">
+        <div class="term-name">data class</div>
+        <div class="term-def">Sadece veri taşımak için kullanılan class — bir "satır/kayıt" temsil eder. Kotlin otomatik olarak karşılaştırma, kopyalama (<code>.copy()</code>) gibi işlevler kazandırır.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">@Entity</div>
+        <div class="term-def">Bir data class'ın Room için "bu bir veritabanı tablosu" olduğunu belirten etiket. <code>tableName</code> ile tablo adı verilir.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">@PrimaryKey(autoGenerate = true)</div>
+        <div class="term-def">Her satırı ayırt eden benzersiz kimlik. <code>autoGenerate</code> ile Room, id'yi otomatik ve artan şekilde kendisi üretir.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Index(unique = true)</div>
+        <div class="term-def">Bir sütunda tekrar olamayacağını veritabanı seviyesinde zorunlu kılar (örn. aynı email iki kez kayıt olamaz).</div>
+      </div>
+      <div class="term">
+        <div class="term-name">ForeignKey + onDelete = CASCADE</div>
+        <div class="term-def">Bir sütunun başka bir tablodaki gerçek bir kayda bağlı olmasını zorunlu kılar. <code>CASCADE</code>: bağlı olunan satır silinirse, ona bağlı satırlar da otomatik silinir.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AŞAMA 3 ================= -->
+  <section class="stage" id="asama-3">
+    <div class="stage-head">
+      <span class="stage-num">03</span>
+      <div>
+        <h2 class="stage-title">Veritabanı Kurulumu</h2>
+        <div class="stage-sub">Öğrendiğin: <b>Room, DAO, suspend fonksiyonlar, Flow, singleton</b></div>
+      </div>
+    </div>
+
+    <div class="terms">
+      <div class="term">
+        <div class="term-name">@Dao / interface</div>
+        <div class="term-def">Veritabanı işlemlerini tanımlayan, gövdesiz bir sözleşme. <code>interface</code> çünkü gerçek SQL kodunu KSP arkada üretir, biz sadece imzayı yazarız.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">@Insert / @Query</div>
+        <div class="term-def"><code>@Insert</code>: verilen nesneyi otomatik SQL ile ekler. <code>@Query("...")</code>: kendi SQL'ini yazarsın, <code>:parametre</code> ile fonksiyon parametresine bağlanır.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">suspend fun</div>
+        <div class="term-def">"Bu işlem zaman alabilir, çağırırken ana ekranı (UI thread) dondurma" demek. Tüm veritabanı okuma/yazma fonksiyonları (tek seferlik sonuç dönenler) <code>suspend</code> olmalı.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Flow&lt;T&gt;</div>
+        <div class="term-def">Tek seferlik sonuç değil, canlı akış. İlgili veri değiştiğinde otomatik yeni değer gönderir — ekranı elle yenilemeye gerek kalmaz. Listeleme sorgularında <code>suspend</code> olmadan kullanılır.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">@Database</div>
+        <div class="term-def">Tüm tabloları (entity'leri) ve DAO'ları bir araya getiren merkezi sınıf. <code>entities = [...]</code>, <code>version</code>, <code>exportSchema = false</code> parametreleri alır.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Singleton + companion object</div>
+        <div class="term-def">Uygulama boyunca veritabanının sadece 1 nesnesi olmasını garanti eden desen. <code>companion object</code>, bir class'a ait ama örnek oluşturmadan çağrılabilen fonksiyonlar barındırır (<code>AppDatabase.getInstance(...)</code>).</div>
+      </div>
+      <pre><code>companion object {
+    @Volatile private var INSTANCE: AppDatabase? = null
+    fun getInstance(context: Context): AppDatabase =
+        INSTANCE ?: synchronized(this) {
+            Room.databaseBuilder(context.applicationContext,
+                AppDatabase::class.java, "app_database")
+                .build().also { INSTANCE = it }
+        }
+}</code></pre>
+      <div class="term">
+        <div class="term-name">Application sınıfı + manifest kaydı</div>
+        <div class="term-def">Herhangi bir ekrandan önce, uygulama açılışında bir kez çalışan nesne. <code>AndroidManifest.xml</code>'de <code>android:name=".GorevlerimApp"</code> ile kaydedilmezse Android bu sınıfı hiç kullanmaz.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">lateinit var ... private set</div>
+        <div class="term-def"><code>lateinit</code>: "şimdi değer veremem ama kullanılmadan önce atayacağım" sözü. <code>private set</code>: değişken dışarıdan okunabilir ama sadece sınıfın kendisi tarafından değiştirilebilir.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AŞAMA 4 ================= -->
+  <section class="stage" id="asama-4">
+    <div class="stage-head">
+      <span class="stage-num">04</span>
+      <div>
+        <h2 class="stage-title">Navigation İskeleti</h2>
+        <div class="stage-sub">Öğrendiğin: <b>sealed class, NavHost, route, back stack</b></div>
+      </div>
+    </div>
+
+    <div class="terms">
+      <div class="term">
+        <div class="term-name">sealed class Screen</div>
+        <div class="term-def">Tüm ekranların route'larını (adreslerini) tek yerde toplar. <code>sealed</code>, bu class'tan sadece aynı dosyada tanımlı türlerin türeyebileceğini garanti eder — yazım hatasını derleme anında yakalar.</div>
+      </div>
+      <pre><code>sealed class Screen(val route: String) {
+    object Login : Screen("login")
+    object Register : Screen("register")
+}</code></pre>
+      <div class="term">
+        <div class="term-name">NavHost / rememberNavController</div>
+        <div class="term-def"><code>NavHost</code>, ekranların gösterildiği konteyner (aynı anda sadece 1 ekran görünür). <code>rememberNavController()</code>, geçişleri yöneten "kumanda" — "şu ekrana git" komutlarını verir.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">startDestination</div>
+        <div class="term-def">Uygulama ilk açıldığında gösterilecek ekran. Gerçek mantık (örn. oturum kontrolü) hazır olana kadar geçici bir ekran seçilebilir.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Ekrana callback (lambda) parametre geçmek</div>
+        <div class="term-def">Bir ekran "ne olacağını" bilmez, çağıran taraf (NavHost) söyler: <code>LoginScreen(onNavigateToRegister = { navController.navigate(...) })</code>. Ekranı test edilebilir ve yeniden kullanılabilir tutar.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Back stack + popBackStack()</div>
+        <div class="term-def">Ziyaret edilen ekranlar üst üste dizilir, en üstteki görünen ekrandır. <code>navigate()</code> yığına ekler; <code>popBackStack()</code> en üsttekini kaldırıp altındaki (zaten var olan) ekrana döner — yeni kopya oluşturmaz.</div>
+      </div>
+      <div class="note">
+        <b>Pratik ders (bugün bulundu):</b> <code>Scaffold</code> kullanmayan bir ekranın içeriği durum çubuğunun (status bar) altına kadar çizilir. Sistem, ekranın en üst ~174 pikselini "zorunlu sistem hareketi" bölgesi sayar — oradaki butonlara dokunuşlar bazen uygulamaya değil sisteme gider. Çözüm: <b>her ekranı <code>Scaffold</code> ile sarmalamak</b>, <code>innerPadding</code>'i içeriğe uygulamak.
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AŞAMA 5 ================= -->
+  <section class="stage" id="asama-5">
+    <div class="stage-head">
+      <span class="stage-num">05</span>
+      <div>
+        <h2 class="stage-title">Kayıt Ekranı Arayüzü</h2>
+        <div class="stage-sub">Öğrendiğin: <b>Column, Scaffold, OutlinedTextField, remember, mutableStateOf</b></div>
+      </div>
+    </div>
+
+    <div class="terms">
+      <div class="term">
+        <div class="term-name">Column / Scaffold</div>
+        <div class="term-def"><code>Column</code>: elemanları üstten aşağıya sırayla dizer. <code>Scaffold</code>: ekranın standart iskeleti, içine koyduğun şey "doldurulacak" alana yerleşir.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">mutableStateOf + remember</div>
+        <div class="term-def"><code>mutableStateOf("")</code>: değiştiğinde Compose'u otomatik haberdar eden bir kutu. <code>remember { }</code>: bu kutuyu her yeniden çizimde (recomposition) sıfırlamadan, aynısını korur.</div>
+      </div>
+      <pre><code>var name by remember { mutableStateOf("") }
+
+OutlinedTextField(
+    value = name,
+    onValueChange = { name = it },
+    label = { Text("Ad") }
+)</code></pre>
+      <div class="term">
+        <div class="term-name">by (property delegation)</div>
+        <div class="term-def"><code>mutableStateOf</code> normalde <code>.value</code> ile okunur/yazılır. <code>by</code> kelimesi bu zahmeti kaldırır, direkt <code>name</code> yazarak okuyup değiştirebilirsin.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">keyboardOptions (Email / Password)</div>
+        <div class="term-def">Klavyenin alana göre şekil değiştirmesi — email'de <code>@</code> kolay erişilir, şifrede otomatik büyük harf yapılmaz. Doğrulama yapmaz, sadece kullanıcı deneyimi kolaylığıdır.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">visualTransformation</div>
+        <div class="term-def">Ekranda <b>ne göründüğünü</b> değiştirir, gerçek veriyi değiştirmez. Şifreyi nokta (•) göstermek buna örnek — arkadaki gerçek değer aynen durur.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">trailingIcon + IconButton</div>
+        <div class="term-def">Bir kutunun sağına tıklanabilir ikon koymak (göz ikonu gibi). Tıklanınca bir boolean state'i tersine çevirip (<code>!passwordVisible</code>) görünümü değiştirir.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Button vs TextButton</div>
+        <div class="term-def"><code>Button</code>: ana aksiyon, dolgulu/belirgin. <code>TextButton</code>: ikincil aksiyon, arka plansız/sade.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AŞAMA 6 ================= -->
+  <section class="stage" id="asama-6">
+    <div class="stage-head">
+      <span class="stage-num">06</span>
+      <div>
+        <h2 class="stage-title">Kayıt ViewModel ve State</h2>
+        <div class="stage-sub">Öğrendiğin: <b>ViewModel, StateFlow, copy(), tek yönlü veri akışı</b></div>
+      </div>
+    </div>
+
+    <div class="terms">
+      <div class="term">
+        <div class="term-name">data class UiState</div>
+        <div class="term-def">Ekranın tüm durumunu (alanlar, hatalar, yükleniyor mu, başarılı mı) tek bir nesnede toplamak — dağınık onlarca <code>remember</code> değişkeni yerine tek kaynak.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">ViewModel</div>
+        <div class="term-def">Ekran döndürüldüğünde/yeniden oluşturulduğunda hayatta kalan özel sınıf. İş mantığı burada yaşar, UI'da değil.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">MutableStateFlow + _x / x deseni</div>
+        <div class="term-def">Her zaman güncel bir değeri olan akış. <code>_uiState</code> (private, değiştirilebilir) / <code>uiState</code> (public, sadece okunabilir — <code>asStateFlow()</code>) ayrımıyla, değiştirme yetkisi sadece ViewModel'de kalır.</div>
+      </div>
+      <pre><code>private val _uiState = MutableStateFlow(RegisterUiState())
+val uiState: StateFlow&lt;RegisterUiState&gt; = _uiState.asStateFlow()
+
+fun onNameChange(newName: String) {
+    _uiState.value = _uiState.value.copy(name = newName)
+}</code></pre>
+      <div class="term">
+        <div class="term-name">.copy()</div>
+        <div class="term-def">Her <code>data class</code>'ın otomatik kazandığı fonksiyon — bir nesnenin birebir kopyasını, sadece belirttiğin alanı değiştirerek oluşturur. <code>val</code> (değiştirilemez) alanları güncellemenin yolu budur.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Tek yönlü veri akışı</div>
+        <div class="term-def">Ekran → olay bildirir (<code>onNameChange</code>) → ViewModel state'i günceller → güncel state ekrana akar. Ekran state'i asla doğrudan değiştirmez.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">ViewModelProvider.Factory</div>
+        <div class="term-def">ViewModel'in constructor'ı parametre (örn. repository) istiyorsa, Android'e "onu ben şöyle kuracağım" diyen bir tarif yazman gerekir.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">viewModel(factory = ...) + LocalContext.current</div>
+        <div class="term-def">Compose'da bir ekrana ViewModel bağlamanın yolu. <code>LocalContext.current</code>, Compose'da Android <code>Context</code>'ine ulaşmanın özel yolu.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">collectAsStateWithLifecycle()</div>
+        <div class="term-def">Bir <code>StateFlow</code>'u Compose'un okuyabileceği hale getirir, ekran görünür değilken dinlemeyi otomatik durdurup kaynak tasarrufu sağlar.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AŞAMA 7 ================= -->
+  <section class="stage" id="asama-7">
+    <div class="stage-head">
+      <span class="stage-num">07</span>
+      <div>
+        <h2 class="stage-title">Kayıt Formu Doğrulama</h2>
+        <div class="stage-sub">Öğrendiğin: <b>Nullable tipler (String?), if/when, isBlank(), regex</b></div>
+      </div>
+    </div>
+
+    <div class="terms">
+      <div class="term">
+        <div class="term-name">object Validators</div>
+        <div class="term-def">Kendine özel veri tutmayan, tekrar kullanılacak fonksiyonlar tek bir <code>object</code>'te toplanır — her yerden <code>Validators.validateName(...)</code> diye çağrılır.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">String? dönüş tipi — "hata ya da yok" deseni</div>
+        <div class="term-def"><b>null = geçerli, hata yok.</b> Dolu string = hata mesajı. Bu dil, UiState'teki <code>...Error</code> alanlarıyla birebir uyumlu.</div>
+      </div>
+      <pre><code>fun validateName(name: String): String? {
+    if (name.isBlank()) return "Ad boş olamaz"
+    if (name.length < 2) return "Ad en az 2 karakter olmalı"
+    return null
+}</code></pre>
+      <div class="term">
+        <div class="term-name">isBlank()</div>
+        <div class="term-def">Bir metnin boş VEYA sadece boşluk karakterlerinden oluşup oluşmadığını kontrol eder — kullanıcı sadece boşluk yazarak kuralı aşamaz.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Erken dönüş (early return)</div>
+        <div class="term-def">Kurallar sırayla kontrol edilir, ilk uyan kuralda <code>return</code> ile hemen çıkılır.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Regex / Patterns.EMAIL_ADDRESS</div>
+        <div class="term-def">Bir metnin belirli bir kalıba uyup uymadığını kontrol eden desen dili. Android'in hazır <code>Patterns.EMAIL_ADDRESS</code> kalıbıyla, kendimiz regex yazmadan email formatını kontrol ettik.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Tüm hataları toplayıp tek .copy() ile yazmak</div>
+        <div class="term-def"><code>validateForm()</code>, 4 kontrolü çalıştırıp sonuçları önce değişkenlerde toplar, sonra <b>tek bir</b> <code>.copy()</code> ile state'e yazar — kullanıcı tüm hataları bir kerede görür, gereksiz çoklu güncelleme olmaz.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">&& (VE) operatörü</div>
+        <div class="term-def">"Hepsi doğru olursa sonuç doğru." Tüm hata alanlarının <code>null</code> olup olmadığını tek seferde kontrol etmek için kullanıldı.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">isError + supportingText</div>
+        <div class="term-def"><code>OutlinedTextField</code>'ın hazır parametreleri: <code>isError = true</code> çerçeveyi otomatik kırmızı yapar; <code>supportingText</code> alanın altına hata mesajını yerleştirir.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">!! (çift ünlem)</div>
+        <div class="term-def">"Buna güven, null değil" demenin yolu — sadece zaten <code>null</code> kontrolü yapılmış bir bloğun içinde güvenli kullanılır.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Değersiz return + doğrulama kapısı</div>
+        <div class="term-def">Dönüş tipi olmayan (<code>Unit</code>) bir fonksiyonda tek başına <code>return</code>, sadece fonksiyondan çıkar. <code>onRegisterClick()</code>'te <code>if (!isValid) return</code> ile geçersiz form hiç kaydedilme aşamasına geçemez.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AŞAMA 8 ================= -->
+  <section class="stage" id="asama-8">
+    <div class="stage-head">
+      <span class="stage-num">08</span>
+      <div>
+        <h2 class="stage-title">Kaydı Veritabanına Bağlama</h2>
+        <div class="stage-sub">Öğrendiğin: <b>Repository deseni, viewModelScope.launch, coroutine, Result, @Transaction</b></div>
+      </div>
+    </div>
+
+    <div class="terms">
+      <div class="term">
+        <div class="term-name">SHA-256 / MessageDigest</div>
+        <div class="term-def">Tek yönlü şifreleme algoritması — bir metni sabit uzunlukta, geri döndürülemez bir çıktıya çevirir. Aynı girdi her zaman aynı çıktıyı üretir, bu yüzden "şifre doğru mu" kontrolü tekrar hash'leyip karşılaştırarak yapılır.</div>
+      </div>
+      <pre><code>object HashUtils {
+    fun sha256(input: String): String {
+        val bytes = MessageDigest.getInstance("SHA-256")
+            .digest(input.toByteArray())
+        return bytes.joinToString("") { "%02x".format(it) }
+    }
+}</code></pre>
+      <div class="term">
+        <div class="term-name">Repository deseni</div>
+        <div class="term-def">ViewModel, veritabanını (Room/DAO) doğrudan bilmez — sadece <code>authRepository.register(...)</code> gibi tek bir fonksiyon çağırır. İleride veri saklama şekli değişse bile (örn. bir API'ye geçilse), sadece Repository değişir, ViewModel etkilenmez.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Result&lt;T&gt; — success / failure</div>
+        <div class="term-def">Bir işlemin başarılı mı başarısız mı olduğunu, başarısızsa sebebiyle birlikte taşıyan hazır Kotlin tipi. <code>Result.success(Unit)</code> / <code>Result.failure(Exception("..."))</code>.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">@Transaction / database.withTransaction { }</div>
+        <div class="term-def">Birden fazla veritabanı işlemini "ya hep ya hiç" kuralıyla gruplar. İçindeki her şey ya tamamen başarılı olur ya da biri başarısız olursa hepsi otomatik geri alınır — yarım kayıt diye bir şey olmaz.</div>
+      </div>
+      <pre><code>suspend fun register(...): Result&lt;Unit&gt; {
+    return database.withTransaction {
+        if (userDao.getUserByEmail(email) != null) {
+            return@withTransaction Result.failure(Exception("Bu e-posta zaten kayıtlı"))
+        }
+        val id = userDao.insertUser(UserEntity(...))
+        categoryDao.insertCategories(defaultCategories(id))
+        Result.success(Unit)
+    }
+}</code></pre>
+      <div class="term">
+        <div class="term-name">return@label (etiketli return)</div>
+        <div class="term-def">İç içe lambda'larda, hangi lambda'dan çıkılacağını netleştirir: <code>return@withTransaction</code> sadece o bloktan çıkar, dıştaki fonksiyonu etkilemez.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">coroutine + viewModelScope.launch</div>
+        <div class="term-def">Arka planda, ana ekranı dondurmadan çalışan iş parçası. <code>viewModelScope</code>, bu işin ömrünü ViewModel'in ömrüne bağlar — ViewModel yok olursa iş otomatik iptal edilir.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">result.onSuccess { } .onFailure { }</div>
+        <div class="term-def"><code>Result</code>'un hazır fonksiyonları — sadece ilgili durumda çalışırlar, ikisi asla birden çalışmaz. Zincirlenebilirler çünkü her biri orijinal <code>Result</code>'ı aynen geri döndürür.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">enabled = !uiState.isLoading</div>
+        <div class="term-def">Yükleniyorken butonu tıklanamaz yapar — kullanıcının art arda basıp aynı kaydı birden fazla kez göndermesini engeller.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">LaunchedEffect(key) { }</div>
+        <div class="term-def">Composable gövdesi her yeniden çizimde çalışır; navigasyon/Toast gibi "bir kerelik" işleri doğrudan oraya yazamayız. <code>LaunchedEffect</code>, içindeki kodu sadece <code>key</code> değiştiğinde çalıştırır.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">MaterialTheme.colorScheme.error / onPrimary</div>
+        <div class="term-def">Temadan alınan anlamsal renkler — hata metni için <code>error</code>, buton rengi üzerinde okunabilir içerik için <code>onPrimary</code>. Elle renk kodu yazmak yerine temadan almak, koyu modda da otomatik doğru görünmesini sağlar.</div>
+      </div>
+      <div class="note">
+        Kayıt akışı uçtan uca çalışıyor: form → doğrulama → hash → transaction → Room. Aynı email ile ikinci kayıt denemesi doğru şekilde reddediliyor, yeni kullanıcıya 4 varsayılan kategori otomatik atanıyor.
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AŞAMA 9 ================= -->
+  <section class="stage" id="asama-9">
+    <div class="stage-head">
+      <span class="stage-num">09</span>
+      <div>
+        <h2 class="stage-title">Giriş Ekranı</h2>
+        <div class="stage-sub">Öğrendiğin: <b>kodun yeniden kullanımı</b> — yeni kavramdan çok, öğrenilenleri doğru yerde tekrar uygulamak</div>
+      </div>
+    </div>
+
+    <div class="terms">
+      <div class="term">
+        <div class="term-name">LoginUiState / LoginViewModel</div>
+        <div class="term-def"><code>RegisterUiState</code> / <code>RegisterViewModel</code>'in birebir aynı iskeleti — <code>data class</code> + <code>MutableStateFlow</code> + <code>_x</code>/<code>x</code> deseni + <code>Factory</code>. Tek fark: daha az alan (sadece email, şifre).</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Validators.validateEmail(...) — aynen tekrar kullanmak</div>
+        <div class="term-def">59. adımda yazılan email format kontrolü, hiç değiştirilmeden hem Register'da hem Login'de çağrılıyor — kuralı iki kere yazmaya gerek kalmadı.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">validatePassword(...)'ü BİLEREK kullanmamak</div>
+        <div class="term-def">Login'de şifre için sadece <code>isBlank()</code> kontrolü var, 6 karakter kuralı (<code>validatePassword</code>) kullanılmıyor — çünkü girişte amaç "kurallara uygun mu" değil "bir şey yazıldı mı"; şifrenin doğruluğu zaten hash karşılaştırmasıyla anlaşılacak.</div>
+        <div class="term-why"><b>Ders:</b> kodu tekrar kullanmak, her zaman aynı fonksiyonu çağırmak demek değil — doğru aracı doğru yerde seçmek demek.</div>
+      </div>
+      <pre><code>suspend fun login(email: String, passwordHash: String): Result&lt;UserEntity&gt; {
+    val user = userDao.getUserByEmail(email)
+        ?: return Result.failure(Exception("E-posta veya şifre hatalı"))
+
+    if (user.passwordHash != passwordHash) {
+        return Result.failure(Exception("E-posta veya şifre hatalı"))
+    }
+    return Result.success(user)
+}</code></pre>
+      <div class="term">
+        <div class="term-name">?: return ... (Elvis + erken çıkış)</div>
+        <div class="term-def">32. adımda <code>INSTANCE ?: synchronized(...)</code> ile gördüğümüz Elvis operatörünün farklı bir kullanımı: <code>"sol taraf null ise, sağdakini çalıştırıp fonksiyondan hemen çık."</code> <code>if (x == null) { return ... }</code> yazmanın kısa yolu.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Result&lt;UserEntity&gt; — neden Result&lt;Unit&gt; değil</div>
+        <div class="term-def"><code>register()</code>'da başarı durumunda dönecek anlamlı veri yoktu. Girişte ise başarılı olursa kullanıcının gerçek bilgilerine (id, email, ad) ihtiyaç var — ileride oturum bilgisini saklarken kullanılacak.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Aynı hata mesajı, iki farklı sebep — güvenlik</div>
+        <div class="term-def">"Kullanıcı bulunamadı" ile "şifre yanlış" durumlarında <b>bilerek aynı</b> <code>"E-posta veya şifre hatalı"</code> mesajı gösteriliyor.</div>
+        <div class="term-why"><b>Neden:</b> farklı mesajlar olsaydı, biri Login formunu deneme-yanılma ile kullanarak hangi email'lerin sistemde kayıtlı olduğunu öğrenebilirdi (user enumeration saldırısı). Belirsiz mesaj, bu bilgiyi hiç sızdırmıyor.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">onLoginClick() — register akışının aynısı</div>
+        <div class="term-def">doğrula → <code>isLoading = true</code> → <code>viewModelScope.launch</code> → hash'le → repository çağır → <code>onSuccess</code>/<code>onFailure</code>. 74-75. adımlardaki <code>onRegisterClick()</code> ile yapısal olarak birebir aynı.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AŞAMA 10 ================= -->
+  <section class="stage" id="asama-10">
+    <div class="stage-head">
+      <span class="stage-num">10</span>
+      <div>
+        <h2 class="stage-title">Oturum Yönetimi</h2>
+        <div class="stage-sub">Öğrendiğin: <b>DataStore, Flow.map, extension property</b></div>
+      </div>
+    </div>
+
+    <div class="terms">
+      <div class="term">
+        <div class="term-name">Extension property (uzantı özelliği)</div>
+        <div class="term-def">Kendi yazmadığın, başkasına ait bir sınıfa (örn. Android'in <code>Context</code>'i) dışarıdan yeni bir özellik "yapıştırma" yolu. Bir kere tanımlayınca, projenin her yerinde o sınıfın normal bir üyesiymiş gibi kullanılır.</div>
+      </div>
+      <pre><code>val Context.dataStore by preferencesDataStore(name = "session_prefs")
+
+// artık her yerde:
+context.dataStore</code></pre>
+      <div class="term">
+        <div class="term-name">preferencesDataStore(name = "...")</div>
+        <div class="term-def">DataStore kütüphanesinin hazır fonksiyonu — verilen isimde bir dosyada anahtar-değer verisi saklayan bir DataStore nesnesi oluşturur/döndürür. Tıpkı Room'daki singleton gibi, dosya başına tek örnek olmalı — bu yüzden class'ın değil, dosyanın en üstünde tanımlanır.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Tipli anahtarlar (Key)</div>
+        <div class="term-def">DataStore'a düz string ile değil, <code>longPreferencesKey("user_id")</code> / <code>stringPreferencesKey("user_name")</code> gibi tipli anahtarlarla yazılır. Bu, "bu anahtarın değeri mutlaka şu tip olmalı" garantisini derleme anında verir.</div>
+      </div>
+      <pre><code>suspend fun saveSession(userId: Long, name: String, email: String) {
+    context.dataStore.edit { preferences ->
+        preferences[USER_ID] = userId
+        preferences[USER_NAME] = name
+        preferences[USER_EMAIL] = email
+    }
+}</code></pre>
+      <div class="term">
+        <div class="term-name">.edit { preferences -&gt; ... }</div>
+        <div class="term-def">DataStore'a yazmanın yolu. Lambda'nın içindeki tüm atamalar <b>tek bir atomik işlem</b> olarak diske yazılır — @Transaction'daki "ya hep ya hiç" ruhuna benzer. Okuma için ise DataStore kendi hazır bir <code>Flow</code> sağlar: <code>context.dataStore.data</code> — tüm kayıtlı verinin canlı akışı.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Flow.map { }</div>
+        <div class="term-def">Bir <code>Flow</code>'un yayınladığı <b>her değeri başka bir şeye dönüştüren</b> araç — listelerdeki <code>.map</code>'in, zamanla akan bir veri üzerindeki karşılığı. <code>.data</code> bize tüm <code>Preferences</code> blobunu veriyordu; <code>.map</code> ile içinden sadece ilgilendiğimiz tek alanı çekiyoruz.</div>
+      </div>
+      <pre><code>val userIdFlow: Flow&lt;Long?&gt; = context.dataStore.data.map { preferences ->
+    preferences[USER_ID]
+}</code></pre>
+      <div class="term">
+        <div class="term-name">Neden nullable (Long?, String?)</div>
+        <div class="term-def">Kullanıcı hiç giriş yapmadıysa, o anahtar DataStore'da hiç yazılmamıştır — <code>preferences[USER_ID]</code> otomatik olarak <code>null</code> döner. "Oturum yok" bilgisini, fazladan bir kontrol yazmadan, doğal olarak elde ediyoruz.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">preferences.clear()</div>
+        <div class="term-def">Tüm kayıtlı anahtarları tek seferde siler — çıkış (logout) yaparken tek tek anahtar silmek yerine kullanılan en basit yol.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">popUpTo(route) { inclusive = true }</div>
+        <div class="term-def">Bir ekrana <code>navigate()</code> ederken, aynı zamanda back stack'i belirli bir noktaya kadar temizlemenin yolu. <code>popUpTo(Screen.Login.route)</code>: "Login route'una kadar her şeyi yığından sil." <code>inclusive = true</code>: "Login'in kendisi de dahil, o da silinsin." Sonuç: girişten sonra geri tuşuyla Login ekranına dönülemez.</div>
+      </div>
+      <div class="note">
+        Oturum artık DataStore'da kalıcı — uygulama kapanıp açılsa bile (Splash aşaması ileride bunu okuyup direkt doğru ekrana yönlendirecek). Başarılı giriş sonrası Login, back stack'ten tamamen temizleniyor.
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AŞAMA 11 ================= -->
+  <section class="stage" id="asama-11">
+    <div class="stage-head">
+      <span class="stage-num">11</span>
+      <div>
+        <h2 class="stage-title">Otomatik Giriş (Splash)</h2>
+        <div class="stage-sub">Öğrendiğin: <b>Flow.first(), durum yönetimi, koşullu navigation</b></div>
+      </div>
+    </div>
+
+    <div class="terms">
+      <div class="term">
+        <div class="term-name">init { }</div>
+        <div class="term-def">Bir class'ın <b>oluşturulduğu an, kimse çağırmadan, otomatik olarak bir kere</b> çalışan blok. Fonksiyonlardan farkı: fonksiyonlar sen çağırınca çalışır, <code>init</code> nesne var olur olmaz kendiliğinden tetiklenir. Oturum kontrolünü ViewModel oluşur oluşmaz başlatmak için kullanıldı.</div>
+      </div>
+      <pre><code>class SplashViewModel(private val sessionManager: SessionManager) : ViewModel() {
+    private val _state = MutableStateFlow(SplashState.Loading)
+    val state: StateFlow&lt;SplashState&gt; = _state.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            val userId = sessionManager.userIdFlow.first()
+            _state.value = if (userId != null) SplashState.LoggedIn else SplashState.LoggedOut
+        }
+    }
+}</code></pre>
+      <div class="term">
+        <div class="term-name">Flow.first()</div>
+        <div class="term-def"><code>userIdFlow</code> canlı, sürekli akan bir akıştı (10. Aşama). Splash'te sürekli dinlemeye gerek yok — sadece <b>"şu an oturum var mı yok mu"</b> diye bir kerelik bir anlık görüntü (snapshot) isteniyor. <code>.first()</code>, akışın yayınladığı <b>ilk değeri alıp sonra dinlemeyi bırakan</b> bir fonksiyon. <code>suspend</code> olduğu için coroutine içinde çağrılır.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Durum yönetimi — neden 3 durumlu bir enum</div>
+        <div class="term-def"><code>SplashState { Loading, LoggedIn, LoggedOut }</code>. ViewModel oluşturulduğu an ile <code>userIdFlow.first()</code>'ün gerçekten sonuç vermesi arasında (DataStore okuma asenkron olduğu için) kısa bir süre geçiyor — bu süre boyunca ekran <code>Loading</code> durumunda kalıyor, boş/garip bir görüntü yerine logo + yükleme simgesi gösteriyor.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">when ifadesi — koşullu navigation</div>
+        <div class="term-def">Bir değeri birden fazla olasılıkla karşılaştıran, <code>if/else</code> zincirinden daha okunaklı yapı. Enum'larla kullanınca Kotlin <b>tüm olası durumların kapsandığından emin olmanı zorluyor</b> — ileride yeni bir durum eklenirse, unutulan bir dal derleyici tarafından fark edilir.</div>
+      </div>
+      <pre><code>LaunchedEffect(state) {
+    when (state) {
+        SplashState.LoggedIn -> onNavigateToTaskList()
+        SplashState.LoggedOut -> onNavigateToLogin()
+        SplashState.Loading -> { /* henüz karar verilmedi, bekle */ }
+    }
+}</code></pre>
+      <div class="term">
+        <div class="term-name">horizontalAlignment / verticalArrangement</div>
+        <div class="term-def"><code>Column</code>'da içeriği tam ortaya yerleştirmenin yolu. <code>verticalArrangement = Arrangement.Center</code>: tüm grubu dikeyde ortalar. <code>horizontalAlignment = Alignment.CenterHorizontally</code>: her satırı yatayda ortalar. Splash ekranının logo + yazı + progress'i tam merkezde görünmesini sağlar.</div>
+      </div>
+      <div class="note">
+        Uygulama artık her açılışta önce Splash'e uğrayıp oturumu kontrol ediyor: varsa direkt Task List'e, yoksa Login'e yönlendiriyor — ikisinde de Splash back stack'ten siliniyor. Test edildi: uygulamayı tamamen kapatıp yeniden açınca, önceden giriş yapılmışsa Login ekranı hiç görünmüyor.
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AŞAMA 12 ================= -->
+  <section class="stage" id="asama-12">
+    <div class="stage-head">
+      <span class="stage-num">12</span>
+      <div>
+        <h2 class="stage-title">Alt Menü (Bottom Navigation)</h2>
+        <div class="stage-sub">Öğrendiğin: <b>NavigationBar, currentBackStackEntryAsState, saveState / restoreState</b></div>
+      </div>
+    </div>
+
+    <div class="terms">
+      <div class="term">
+        <div class="term-name">BottomNavItem (sealed class deseni tekrar)</div>
+        <div class="term-def"><code>Screen</code> sealed class'ının aynısı — bu sefer her öğenin route'unun yanında etiket ve ikon da var. Route'ları yeniden string olarak yazmak yerine <code>Screen.TaskList.route</code> gibi zaten var olan sabitlere referans verildi — tek doğru kaynak prensibi.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">NavigationBar / NavigationBarItem</div>
+        <div class="term-def">Material3'ün hazır alt menü kapsayıcısı ve içindeki tek bir sekme. <code>NavigationBarItem</code>'ın <code>selected</code>, <code>onClick</code>, <code>icon</code>, <code>label</code> parametreleri var.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">items.forEach { } ile tekrar önleme</div>
+        <div class="term-def">3 sekmeyi elle 3 kere yazmak yerine, bir listede toplayıp <code>forEach</code> ile aynı kalıbı her biri için otomatik tekrarlamak. Yeni bir sekme eklemek, listeye bir satır eklemek kadar basit hale geliyor.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">currentBackStackEntryAsState()</div>
+        <div class="term-def"><code>NavController</code>'ın "şu an hangi ekrandayız" bilgisini Compose'un takip edebileceği bir <code>State</code>'e çevirir — <code>collectAsStateWithLifecycle()</code>'ın <code>StateFlow</code> için yaptığını, navigasyon için yapıyor.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">?. (güvenli çağrı) zinciri</div>
+        <div class="term-def"><code>currentBackStackEntry?.destination?.route</code> — <code>!!</code>'in tersi: zincirdeki herhangi bir halka <code>null</code> olursa tüm ifade <code>null</code> olur, uygulama <b>çökmez</b>. <code>!!</code> çökme riski taşırken, <code>?.</code> güvenli şekilde "yoksa yok" der.</div>
+      </div>
+      <pre><code>val currentRoute = currentBackStackEntry?.destination?.route
+selected = currentRoute == item.route</code></pre>
+      <div class="term">
+        <div class="term-name">in operatörü</div>
+        <div class="term-def"><code>currentRoute in bottomBarRoutes</code> — "bu değer, şu listenin içinde var mı" diye sormanın kısa yolu. <code>bottomBarRoutes.contains(currentRoute)</code> yazmanın temiz hali.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Scaffold içinde Scaffold — koşullu bottomBar</div>
+        <div class="term-def">Tüm <code>NavHost</code>'u saran dış bir <code>Scaffold</code>, <code>bottomBar</code> slotuna sadece belirli route'larda (Görevler, Profil, Ayarlar) alt menüyü koyuyor. Detay/Ekle-Düzenle gibi ekranlarda <code>currentRoute</code> listede olmadığı için menü otomatik gizleniyor.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Sekme geçişinde yığın şişmesi sorunu</div>
+        <div class="term-def">Sekmeler arası art arda geçmek, her seferinde yığına yeni bir kopya ekler — yığın şişer, geri tuşu beklenmedik davranır. Çözüm aşağıdaki 3 ayar.</div>
+      </div>
+      <pre><code>navController.navigate(item.route) {
+    popUpTo(navController.graph.findStartDestination().id) {
+        saveState = true
+    }
+    launchSingleTop = true
+    restoreState = true
+}</code></pre>
+      <div class="term">
+        <div class="term-name">popUpTo + saveState</div>
+        <div class="term-def">Yeni sekmeye geçmeden önce yığını başlangıç noktasına kadar temizler (yığın hep tek seviyede kalır). <code>saveState = true</code>: temizlenen ekranın durumunu (örn. scroll konumu) unutmaz, saklar.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">launchSingleTop</div>
+        <div class="term-def">Zaten o sekmedeysen, üstüne bir kopya daha eklemez — var olanı kullanır.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">restoreState</div>
+        <div class="term-def">Bu sekmeye daha önce kaydedilmiş bir durum varsa, sıfırdan değil o kaldığı yerden devam ettirir. <code>saveState</code> ile birlikte çalışır — Google'ın resmi önerdiği bottom navigation deseni budur.</div>
+      </div>
+      <div class="note">
+        Uçtan uca test edildi: kayıt → giriş → Task List'te alt menü görünüyor, Görevler/Profil/Ayarlar arasında geçiş ve vurgulama doğru çalışıyor, uygulama kapatılıp açılınca oturum korunuyor ve alt menü doğru sekmede açılıyor.
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= EK A ================= -->
+  <section class="stage" id="ek-a">
+    <span class="appendix-tag">Ek · Bugünkü Pratik Ders</span>
+    <h2 class="stage-title" style="margin-top:0;">Gerçek Bir Hatayı Avlamak</h2>
+    <div class="terms">
+      <div class="term">
+        <div class="term-name">Belirti</div>
+        <div class="term-def">"Kayıt ol" butonuna tıklandığında hiçbir şey olmuyordu — ne hata, ne çökme, sadece sessiz bir tepkisizlik.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Teşhis</div>
+        <div class="term-def"><code>dumpsys window displays</code> ile kontrol edilince, ekranın üst ~174 pikselinin <code>mandatorySystemGestures</code> bölgesi olduğu görüldü — sistem bu alandaki dokunuşları kendi kullanımına (bildirim çekmecesi gibi) ayırıyor. <code>LoginScreen</code>, <code>Scaffold</code> kullanmadığı için butonu tam o bölgede kalmıştı.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Çözüm</div>
+        <div class="term-def">Ekranı <code>Scaffold</code> ile sarmalayıp <code>innerPadding</code>'i uygulamak, içeriği güvenli alana itti.</div>
+        <div class="term-why"><b>Ders:</b> <code>enableEdgeToEdge()</code> kullanan her ekran, içeriğini sistem çubuklarından korumak için mutlaka <code>Scaffold</code> (veya eşdeğer bir inset yönetimi) kullanmalı — sadece görsel değil, dokunulabilirlik meselesi.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= EK B ================= -->
+  <section class="stage" id="ek-b">
+    <span class="appendix-tag">Ek · Araçlar</span>
+    <h2 class="stage-title" style="margin-top:0;">Git &amp; GitHub Temelleri</h2>
+    <div class="terms">
+      <div class="term">
+        <div class="term-name">git init</div>
+        <div class="term-def">Bir klasörü git deposuna çevirir, değişiklikleri takip etmeye başlar.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">.gitignore</div>
+        <div class="term-def">"Şu dosyaları asla takip etme" listesi. <code>build/</code>, <code>local.properties</code>, <code>.kotlin/</code> gibi kişisel veya tekrar üretilebilir dosyalar burada olur.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">git add / commit</div>
+        <div class="term-def"><code>add</code>: değişiklikleri hazır listesine ekler. <code>commit</code>: o anki hâli bir mesajla kalıcı kaydeder — henüz sadece yerelde.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">remote (origin) + push</div>
+        <div class="term-def"><code>git remote add origin &lt;url&gt;</code>: yerel depoya GitHub adresini tanıtır. <code>git push -u origin main</code>: commit'leri GitHub'a gönderir, <code>-u</code> ileride sadece <code>git push</code> yazmanı sağlar.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">"repository not found" hatası</div>
+        <div class="term-def">Genelde ya URL yanlış, ya repo GitHub'da hiç oluşturulmamış, ya da kimlik doğrulaması (artık şifre değil, token gerekiyor) başarısız olmuş demektir.</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>Görevlerim projesi üzerinden, adım adım. · Aşama 12 tamamlandı.</footer>
+
+</div>
