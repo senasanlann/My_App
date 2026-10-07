@@ -1,3 +1,4 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Kotlin Defterim</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap">
 <style>
@@ -222,8 +223,27 @@
       <a href="#asama-10">10. Oturum</a>
       <a href="#asama-11">11. Splash</a>
       <a href="#asama-12">12. Alt Menü</a>
+      <a href="#asama-13">13. Profil</a>
+      <a href="#asama-14">14. Liste</a>
+      <a href="#asama-15">15. Detay</a>
+      <a href="#asama-16">16. Ekleme</a>
+      <a href="#asama-17">17. Kategori</a>
+      <a href="#asama-18">18. Düzenleme</a>
+      <a href="#asama-19">19. Silme</a>
+      <a href="#asama-20">20. Kat. Silme</a>
+      <a href="#asama-21">21. Arama</a>
+      <a href="#asama-22">22. Filtre</a>
+      <a href="#asama-23">23. Sıralama</a>
+      <a href="#asama-24">24. Birlikte</a>
+      <a href="#asama-25">25. İstatistik</a>
+      <a href="#asama-26">26. Ayarlar</a>
+      <a href="#asama-27">27. Durumlar</a>
+      <a href="#asama-28">28. Form UX</a>
       <a href="#ek-a">Ek A</a>
       <a href="#ek-b">Ek B</a>
+      <a href="#ek-c">Ek C</a>
+      <a href="#ek-d">Ek D</a>
+      <a href="#ek-e">Ek E</a>
     </nav>
   </div>
 </div>
@@ -232,7 +252,7 @@
 
   <div class="intro">
     <h1 class="title">Kotlin Defterim</h1>
-    <p>Görevlerim uygulamasını baştan kurarken öğrendiğim her Kotlin ve Android Compose kavramı, aşama aşama. Her terim: ne olduğu, nasıl kullanıldığı ve neden o şekilde yazıldığı. 1. Aşama'dan şu an içinde bulunduğumuz 12. Aşama'ya kadar.</p>
+    <p>Görevlerim uygulamasını baştan kurarken öğrendiğim her Kotlin ve Android Compose kavramı, aşama aşama. Her terim: ne olduğu, nasıl kullanıldığı ve neden o şekilde yazıldığı. 1. Aşama'dan 28. Aşama'ya, ve ürünleşme sürecindeki gerçek hata hikâyelerini anlatan Ek'lere kadar.</p>
   </div>
 
   <!-- ================= AŞAMA 1 ================= -->
@@ -891,6 +911,675 @@ selected = currentRoute == item.route</code></pre>
     </div>
   </section>
 
+  <!-- ================= AŞAMA 13 ================= -->
+  <section class="stage" id="asama-13">
+    <div class="stage-head">
+      <span class="stage-num">13</span>
+      <div>
+        <h2 class="stage-title">Profil ve Çıkış</h2>
+        <div class="stage-sub">Öğrendiğin: <b>ViewModel'de birden fazla Flow okumak, AlertDialog, popUpTo(0)</b></div>
+      </div>
+    </div>
+
+    <div class="terms">
+      <div class="term">
+        <div class="term-name">combine(flow1, flow2) { v1, v2 -> ... }</div>
+        <div class="term-def">Birden fazla <code>Flow</code>'u <b>tek bir yeni Flow'a</b> birleştirir. Kaynaklardan <b>herhangi biri</b> yeni değer yayınladığında, ikisinin en güncel değerleriyle lambda tekrar çalışır. Ad ve email akışları tek bir <code>ProfileUiState</code>'e böyle birleştirildi.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">.collect { state -> ... }</div>
+        <div class="term-def"><code>.first()</code>'ten farklı olarak <b>asla durmayan</b>, bir Flow'u sürekli dinleme yolu. Her yeni değerde lambda tekrar çalışır — ViewModel yaşadığı sürece devam eder. Düz coroutine kodunda bir Flow'u "dinlemeye başlamanın" temel yöntemi.</div>
+      </div>
+      <pre><code>init {
+    viewModelScope.launch {
+        combine(sessionManager.userNameFlow, sessionManager.userEmailFlow) { name, email ->
+            ProfileUiState(name = name ?: "", email = email ?: "")
+        }.collect { state -> _uiState.value = state }
+    }
+}</code></pre>
+      <div class="term">
+        <div class="term-name">Box</div>
+        <div class="term-def"><code>Column</code>'dan farklı olarak içindeki her şeyi <b>üst üste, aynı noktaya</b> yığan layout. Baş harf yazısını, yuvarlak renkli arka planın üzerine bindirmek için kullanıldı.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Modifier.background(color, shape = CircleShape)</div>
+        <div class="term-def">Arka plana bir şekil verir — <code>CircleShape</code> ile kare bir alan tam bir daireye dönüşür. <code>contentAlignment = Alignment.Center</code> ile de içindeki yazı tam merkeze oturtulur.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">.take(1) / .uppercase()</div>
+        <div class="term-def">İki String fonksiyonu: <code>.take(n)</code> metnin ilk n karakterini alır, <code>.uppercase()</code> büyük harfe çevirir. <code>"sena".take(1).uppercase()</code> → <code>"S"</code>.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">OutlinedButton</div>
+        <div class="term-def">Üçüncü buton türü — <code>Button</code> (dolgulu, ana aksiyon) ile <code>TextButton</code> (sade, ikincil) arasında: sadece kenarlığı var. "Önemli ama ana aksiyon değil" işler için (çıkış yapmak gibi). <code>ButtonDefaults.outlinedButtonColors(contentColor = ...)</code> ile rengi özelleştirilir.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">AlertDialog</div>
+        <div class="term-def">Ortada beliren onay penceresi. <code>title</code>, <code>text</code>, <code>confirmButton</code>, <code>dismissButton</code>, ve dışarı tıklanınca/geri tuşuna basılınca çalışan <code>onDismissRequest</code> parametreleri var. Bir <code>remember { mutableStateOf(false) }</code> ile açılıp kapanıyor.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">isLoggedOut (isSuccess deseninin tekrarı)</div>
+        <div class="term-def"><code>RegisterUiState</code>/<code>LoginUiState</code>'teki <code>isSuccess</code> ile aynı mantık: asenkron bir işlem bitince <code>true</code> olan bir bayrak, <code>LaunchedEffect</code> bunu izleyip yönlendirmeyi tetikliyor.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">popUpTo(0)</div>
+        <div class="term-def"><code>popUpTo(belirliRoute) { inclusive = true }</code>'dan farklı olarak, <code>0</code> navigasyonda "hiçbir şey, en kök nokta" anlamına gelir — yığındaki <b>her şeyi</b>, ne olursa olsun, tamamen temizler. Kullanıcı Profile'a hangi yoldan geldiği bilinmediğinde (farklı sekmelerden gelmiş olabilir), yığını güvenle tamamen boşaltmanın yolu.</div>
+      </div>
+      <div class="note">
+        Uçtan uca test edildi: Profil'de ad/email/avatar doğru görünüyor, çıkış dialog'u çalışıyor, onaylayınca Login'e dönüp geri tuşuyla görevlere dönülemiyor, uygulama kapatılıp açılınca da otomatik giriş yapılmıyor (oturum gerçekten temizlenmiş).
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AŞAMA 14 ================= -->
+  <section class="stage" id="asama-14">
+    <div class="stage-head">
+      <span class="stage-num">14</span>
+      <div>
+        <h2 class="stage-title">Görevleri Listeleme (Read)</h2>
+        <div class="stage-sub">Öğrendiğin: <b>LazyColumn, Card, flatMapLatest, combine, stateIn</b></div>
+      </div>
+    </div>
+
+    <div class="terms">
+      <div class="term">
+        <div class="term-name">flatMapLatest { userId -> ... }</div>
+        <div class="term-def">Bir <code>Flow</code>'un yayınladığı her yeni değer için <b>başka bir Flow'a geçiş</b> yapar. <code>userIdFlow</code> değiştiğinde (farklı kullanıcı girişi gibi), eski görev/kategori akışı <b>iptal edilip</b> yeni kullanıcı için baştan başlanır — "latest" (en son), eskisi yarım kalmış olsa bile terk edilir demek.</div>
+      </div>
+      <pre><code>val uiState: StateFlow&lt;TaskListUiState&gt; = sessionManager.userIdFlow
+    .flatMapLatest { userId ->
+        if (userId == null) {
+            flowOf(TaskListUiState(tasks = emptyList(), isLoading = false))
+        } else {
+            combine(taskRepository.getTasks(userId), categoryRepository.getCategories(userId)) { tasks, categories ->
+                // ... TaskListItem'lara dönüştür
+            }
+        }
+    }
+    .stateIn(scope = viewModelScope, started = SharingStarted.WhileSubscribed(5000), initialValue = TaskListUiState())</code></pre>
+      <div class="term">
+        <div class="term-name">stateIn(scope, started, initialValue)</div>
+        <div class="term-def">Bir <code>Flow</code> zincirini doğrudan <code>StateFlow</code>'a çeviren yol — manuel <code>MutableStateFlow</code> + <code>collect</code> yazmanın alternatifi. <code>SharingStarted.WhileSubscribed(5000)</code>: "ekran izlerken akışı dinle, ekran kapanınca 5 saniye bekle, sonra durdur" — gereksiz yeniden başlatmaları önler.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">flowOf(value)</div>
+        <div class="term-def">Tek bir sabit değeri, hazır bir <code>Flow</code> olarak paketler. Kullanıcı yoksa (oturum kapalıyken) boş bir state döndürmek için kullanıldı.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">associateBy({ it.id }, { it.name })</div>
+        <div class="term-def">Bir listeyi <code>Map</code>'e çevirir (kategori id → kategori adı). Görev kartında kategori id'si değil, okunabilir adı göstermek için hızlı eşleştirme sağlar.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">LazyColumn + items(list, key = { it.id })</div>
+        <div class="term-def"><code>Column</code>'dan farkı: <b>sadece ekranda görünen</b> satırları çizer, uzun listelerde performans sağlar. <code>key</code>, Compose'a "bu öğe hangi kimlikle eşleşiyor" söyler — liste değiştiğinde doğru öğeyi doğru yerde günceller, gereksiz yeniden çizimi önler.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Card</div>
+        <div class="term-def">Material3'ün hazır, hafif yükseltilmiş/gölgeli yüzey kutusu — liste öğeleri için standart görünüm.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Row</div>
+        <div class="term-def"><code>Column</code>'un yatay versiyonu — elemanları soldan sağa dizer. Önem derecesi rengi şeridini metnin yanına koymak için kullanıldı.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">RoundedCornerShape</div>
+        <div class="term-def"><code>CircleShape</code>'in daha esnek hali — köşe yarıçapını sen belirlersin. Durum etiketinin hafif yuvarlatılmış köşeleri için kullanıldı.</div>
+      </div>
+      <div class="note">
+        Uçtan uca test edildi: kayıt → giriş → Task List'te 3 örnek görev (GEÇİCİ seed verisi) doğru kategori, renkli durum etiketi ve tarihle listelendi. Reaktif zincir (oturum → görevler/kategoriler → ekran) sorunsuz çalışıyor.
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AŞAMA 15 ================= -->
+  <section class="stage" id="asama-15">
+    <div class="stage-head">
+      <span class="stage-num">15</span>
+      <div>
+        <h2 class="stage-title">Görev Detay Ekranı</h2>
+        <div class="stage-sub">Öğrendiğin: <b>Navigation argümanları, SavedStateHandle</b></div>
+      </div>
+    </div>
+
+    <div class="terms">
+      <div class="term">
+        <div class="term-name">Route'a argüman tanımlamak — {taskId}</div>
+        <div class="term-def">Route string'ine <code>{isim}</code> ile bir "boşluk" tanımlanır: <code>"task_detail/{taskId}"</code>. <code>navArgument("taskId") { type = NavType.LongType }</code> ile bu boşluğun tipi bildirilir. Bir yardımcı fonksiyon (<code>createRoute(taskId)</code>) gerçek değeri route'a gömer: <code>"task_detail/5"</code>.</div>
+      </div>
+      <pre><code>object TaskDetail : Screen("task_detail/{taskId}") {
+    fun createRoute(taskId: Long) = "task_detail/$taskId"
+}</code></pre>
+      <div class="term">
+        <div class="term-name">SavedStateHandle</div>
+        <div class="term-def">Bir ViewModel'in "hangi argümanla açıldığını" okuyabilmesini sağlayan özel nesne. <code>checkNotNull(savedStateHandle.get&lt;Long&gt;("taskId"))</code> ile zorunlu bir argümanı okur — yoksa anlamlı bir hatayla durur.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">AbstractSavedStateViewModelFactory</div>
+        <div class="term-def"><code>SavedStateHandle</code> ihtiyacı olan bir ViewModel için özel Factory türü. Normal <code>ViewModelProvider.Factory</code>'den farkı: <code>create(key, modelClass, handle)</code> imzası alır, <code>handle</code> otomatik oluşturulup sana verilir.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">TopAppBar</div>
+        <div class="term-def"><code>Scaffold</code>'un daha önce <code>bottomBar</code> slotunu kullanmıştık, burada ilk kez <b>`topBar`</b> slotunu kullandık. <code>navigationIcon</code> ile sol üstte geri butonu eklenir.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">HorizontalDivider</div>
+        <div class="term-def">Basit, ince bir yatay ayraç çizgisi — bölümleri görsel olarak ayırmak için.</div>
+      </div>
+      <div class="note">
+        <b>Gerçek bir hata yakalandı ve çözüldü:</b> <code>SavedStateHandle</code>, navigasyon argümanlarını <b>otomatik almıyor</b>. <code>AbstractSavedStateViewModelFactory</code>'ye, <code>NavBackStackEntry</code>'nin argüman paketini (<code>backStackEntry.arguments</code>) <b>elle, <code>defaultArgs</code> olarak</b> vermek gerekiyor — yoksa <code>IllegalStateException: Required value was null</code> ile çöker. Bu paket, <code>composable { backStackEntry -> ... }</code> lambda parametresinden alınıp ekrana taşınarak çözüldü.
+      </div>
+      <div class="note">
+        Uçtan uca test edildi: göreve tıklayınca detay ekranı tüm bilgilerle (başlık, durum, önem, kategori, açıklama, oluşturma/güncelleme tarihi) açılıyor, alt menü detayda gizleniyor, geri butonu listeye doğru dönüyor.
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AŞAMA 16 ================= -->
+  <section class="stage" id="asama-16">
+    <div class="stage-head">
+      <span class="stage-num">16</span>
+      <div>
+        <h2 class="stage-title">Yeni Görev Ekleme (Create)</h2>
+        <div class="stage-sub">Öğrendiğin: <b>ExposedDropdownMenuBox, SegmentedButton, çok satırlı TextField</b></div>
+      </div>
+    </div>
+
+    <div class="terms">
+      <div class="term">
+        <div class="term-name">ExposedDropdownMenuBox</div>
+        <div class="term-def">Material3'ün "açılır liste" bileşeni. İçine salt-okunur bir <code>OutlinedTextField</code> (seçili değeri gösterir) ve bir <code>ExposedDropdownMenu</code> (tıklanınca açılan seçenek listesi) koyulur. TextField'a <code>Modifier.menuAnchor()</code> eklemek, menünün tam o alanın altında açılmasını sağlar.</div>
+      </div>
+      <pre><code>ExposedDropdownMenuBox(expanded, onExpandedChange) {
+    OutlinedTextField(
+        value = selectedCategoryName, onValueChange = {}, readOnly = true,
+        modifier = Modifier.menuAnchor()
+    )
+    ExposedDropdownMenu(expanded, onDismissRequest) {
+        categories.forEach { category ->
+            DropdownMenuItem(text = { Text(category.name) }, onClick = { ... })
+        }
+    }
+}</code></pre>
+      <div class="term">
+        <div class="term-name">SegmentedButton</div>
+        <div class="term-def">Yan yana duran, tek seçimli "sekme" görünümü — radyo butonlarının modern hali. <code>SingleChoiceSegmentedButtonRow</code> içine konur, her <code>SegmentedButton</code>'a <code>SegmentedButtonDefaults.itemShape(index, count)</code> ile doğru köşe yuvarlaklığı verilir (ilk eleman solda, son eleman sağda düz köşeli).</div>
+      </div>
+      <div class="term">
+        <div class="term-name">minLines / maxLines</div>
+        <div class="term-def"><code>OutlinedTextField</code>'ın çok satırlı yazılabilmesi için <code>minLines = 3, maxLines = 6</code> verildi. <code>singleLine = true</code> kullanılmadığı için Enter'a basınca alt satıra geçer.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">FloatingActionButton (FAB)</div>
+        <div class="term-def">Ekranın sağ-altında sabit duran yuvarlak buton. <code>Scaffold</code>'un <code>floatingActionButton</code> slotuna verilir — <code>bottomBar</code>/<code>topBar</code> gibi, Scaffold'un kendi ayırdığı bir alan.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Varsayılan değerlerle açılan form</div>
+        <div class="term-def"><code>AddEditTaskViewModel</code>, <code>init{}</code> içinde kullanıcının kategorilerini okuyup "Kişisel" kategorisini, "Yapılacak" durumunu ve "Orta" önemi otomatik seçili getiriyor — kullanıcı sıfırdan seçim yapmak zorunda kalmıyor.</div>
+      </div>
+      <div class="note">
+        Uçtan uca test edildi: boş başlıkla kaydetmeye çalışınca "Başlık boş olamaz" hatası çıkıyor ve ekranda kalıyor; geçerli bilgilerle kaydedince görev listede doğru kategori/durum/önem ile görünüyor. 126. adımdaki geçici örnek veri kodu da <code>TaskListViewModel</code>'den silindi — artık gerçek veriler kullanılıyor.
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AŞAMA 17 ================= -->
+  <section class="stage" id="asama-17">
+    <div class="stage-head">
+      <span class="stage-num">17</span>
+      <div>
+        <h2 class="stage-title">Yeni Kategori Oluşturma (hızlı yol)</h2>
+        <div class="stage-sub">Öğrendiğin: <b>Dialog içinde Dialog, insert sonrası yeni id'yi almak</b></div>
+      </div>
+    </div>
+
+    <div class="terms">
+      <div class="term">
+        <div class="term-name">@Insert'ten dönen Long</div>
+        <div class="term-def">Normalde <code>insert</code> fonksiyonları <code>Unit</code> döner. Ama <code>suspend fun insertCategory(category: CategoryEntity): Long</code> yazarsan, Room otomatik olarak veritabanının yeni satıra verdiği <b>id'yi</b> geri verir. Bu sayede "az önce eklediğim kategori hangisiydi" sorusuna cevap aramadan, direkt id'yi kullanabiliriz.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Açılır listeye özel bir satır eklemek</div>
+        <div class="term-def"><code>ExposedDropdownMenu</code> içindeki <code>DropdownMenuItem</code>'lar sadece veritabanı verisinden gelmek zorunda değil. Listenin en altına bir <code>HorizontalDivider</code> ve ardından sabit bir <code>"+ Yeni kategori"</code> satırı ekleyip, ona tıklanınca kategori listesini değil, <code>NewCategoryDialog</code>'u açıyoruz.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Dialog'dan Dialog açmak</div>
+        <div class="term-def">Kategori açılır listesi kapanırken (<code>categoryMenuExpanded = false</code>) aynı anda <code>showNewCategoryDialog = true</code> yapılıyor. İki ayrı <code>remember { mutableStateOf(false) }</code> birbirinden bağımsız yönetildiği için bu geçiş sorunsuz çalışıyor.</div>
+      </div>
+      <div class="note">
+        Uçtan uca test edildi: "Ekle"ye boş adla basınca "Kategori adı boş olamaz" hatası çıkıyor; geçerli bir adla ("Is") basınca kategori veritabanına kaydediliyor, dropdown'da listeye ekleniyor <b>ve</b> formda otomatik seçili hale geliyor — kullanıcı tekrar dropdown'u açıp seçmek zorunda kalmıyor.
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AŞAMA 18 ================= -->
+  <section class="stage" id="asama-18">
+    <div class="stage-head">
+      <span class="stage-num">18</span>
+      <div>
+        <h2 class="stage-title">Görev Düzenleme (Update)</h2>
+        <div class="stage-sub">Öğrendiğin: <b>Opsiyonel navigation argümanı, aynı ekranı iki amaçla kullanma</b></div>
+      </div>
+    </div>
+
+    <div class="terms">
+      <div class="term">
+        <div class="term-name">Opsiyonel route argümanı — ?taskId={taskId}</div>
+        <div class="term-def">15. Aşama'da <code>{taskId}</code> zorunlu bir argümandı (<code>/</code> ile route'un parçası). Burada <code>?taskId={taskId}</code> şeklinde bir <b>query parametresi</b> kullanıldı ve <code>navArgument("taskId") { defaultValue = -1L }</code> ile "verilmezse -1 kabul et" dendi. Böylece aynı route hem "yeni görev" (<code>-1</code>) hem "düzenle" (gerçek id) için kullanılabiliyor.</div>
+      </div>
+      <pre><code>object AddEditTask : Screen("add_edit_task?taskId={taskId}") {
+    fun createRoute(taskId: Long = -1L) = "add_edit_task?taskId=$taskId"
+}</code></pre>
+      <div class="term">
+        <div class="term-name">Aynı ViewModel, iki mod</div>
+        <div class="term-def"><code>AddEditTaskViewModel</code>, <code>init{}</code> içinde <code>taskId != -1L</code> ise veritabanından o görevi çekip tüm alanları dolduruyor ve <code>isEditMode = true</code> yapıyor. Değilse boş/varsayılan bir form açıyor. Ekran, <code>uiState.isEditMode</code>'a göre başlığını <code>"Görevi Düzenle"</code> / <code>"Yeni Görev"</code> arasında değiştiriyor.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">@Update ve updatedAt / createdAt farkı</div>
+        <div class="term-def">Room'un <code>@Update</code> anotasyonu, primary key'i eşleşen satırı tamamen değiştirir. Kaydet'e basınca düzenleme modunda <code>existingTask!!.copy(..., updatedAt = System.currentTimeMillis())</code> çağrılıyor — <code>createdAt</code> kopyalanan nesneden geldiği için <b>hiç değişmiyor</b>, sadece <code>updatedAt</code> güncelleniyor.</div>
+      </div>
+      <div class="note">
+        Uçtan uca test edildi: bir görevi açıp durumunu "Devam Ediyor" yapıp kaydedince, detay ekranına otomatik dönülüyor ve "Güncelleme" saati değişirken "Oluşturma" saati aynı kalıyor — reaktif akış (<code>Flow</code> → <code>StateFlow</code>) sayesinde ekranı elle yenilemeye gerek kalmadı.
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AŞAMA 19 ================= -->
+  <section class="stage" id="asama-19">
+    <div class="stage-head">
+      <span class="stage-num">19</span>
+      <div>
+        <h2 class="stage-title">Görev Silme ve Onay (Delete)</h2>
+        <div class="stage-sub">Öğrendiğin: <b>Yeniden kullanılabilir bileşen, Snackbar, iki ekran arası sonuç taşımak</b></div>
+      </div>
+    </div>
+
+    <div class="terms">
+      <div class="term">
+        <div class="term-name">Yeniden kullanılabilir ConfirmDialog</div>
+        <div class="term-def">13. Aşama'daki çıkış onay dialog'u tek bir ekrana özeldi. Bu aşamada aynı yapı <code>title</code>, <code>message</code>, <code>confirmText</code>, <code>onConfirm</code>, <code>onDismiss</code> parametreleriyle genel bir <code>ui/components/ConfirmDialog.kt</code> haline getirildi — artık görev silme <b>ve</b> kategori silme (20. Aşama) aynı bileşeni kullanıyor.</div>
+      </div>
+      <pre><code>@Composable
+fun ConfirmDialog(
+    title: String, message: String,
+    confirmText: String = "Onayla", dismissText: String = "Vazgeç",
+    onConfirm: () -> Unit, onDismiss: () -> Unit
+) {
+    AlertDialog(onDismissRequest = onDismiss, title = { Text(title) }, text = { Text(message) },
+        confirmButton = { TextButton(onClick = onConfirm) { Text(confirmText) } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text(dismissText) } })
+}</code></pre>
+      <div class="term">
+        <div class="term-name">Snackbar / SnackbarHostState</div>
+        <div class="term-def">Ekranın altında kısa süre belirip kaybolan bildirim. <code>Scaffold</code>'un <code>snackbarHost</code> slotuna <code>SnackbarHost(snackbarHostState)</code> verilir; göstermek için <code>snackbarHostState.showSnackbar("Görev silindi")</code> bir coroutine içinde (<code>LaunchedEffect</code>) çağrılır.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">İki ekran arasında "sonuç" taşımak — savedStateHandle</div>
+        <div class="term-def">Detay ekranı silip listeye geri dönerken, listeye "bir şey silindi" demesi gerekiyor. Bunun için <code>navController.previousBackStackEntry?.savedStateHandle?.set("taskDeleted", true)</code> kullanıldı — bir önceki ekranın "hafızasına" küçük bir not bırakmak gibi. Liste ekranı bunu <code>backStackEntry.savedStateHandle.getStateFlow("taskDeleted", false)</code> ile okuyup Snackbar'ı tetikliyor, sonra notu <code>false</code>'a çekiyor.</div>
+      </div>
+      <div class="note">
+        Uçtan uca test edildi: silme dialog'unda "Vazgeç"e basınca görev <b>silinmiyor</b> ve detay ekranında kalınıyor; "Sil"e basınca görev veritabanından siliniyor, liste ekranına dönülüyor ve "Görev silindi" Snackbar'ı görünüyor.
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AŞAMA 20 ================= -->
+  <section class="stage" id="asama-20">
+    <div class="stage-head">
+      <span class="stage-num">20</span>
+      <div>
+        <h2 class="stage-title">Kategori Silme (görevleri Kişisel'e taşıyarak)</h2>
+        <div class="stage-sub">Öğrendiğin: <b>Toplu UPDATE sorgusu, COUNT sorgusu, withTransaction</b></div>
+      </div>
+    </div>
+
+    <div class="terms">
+      <div class="term">
+        <div class="term-name">COUNT sorgusu</div>
+        <div class="term-def"><code>@Query("SELECT COUNT(*) FROM tasks WHERE categoryId = :categoryId") suspend fun countTasksInCategory(categoryId: Long): Int</code> — bir kategoride kaç görev olduğunu, hepsini çekip <code>.size</code> almadan, veritabanına direkt saydırarak öğrenir.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Toplu UPDATE sorgusu</div>
+        <div class="term-def"><code>@Query("UPDATE tasks SET categoryId = :toCategoryId WHERE categoryId = :fromCategoryId") suspend fun moveTasksToCategory(...)</code> — o kategorideki <b>tüm</b> görevleri, tek tek okuyup yazmadan, bir SQL komutuyla aynı anda taşır.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">withTransaction</div>
+        <div class="term-def">Room KTX'in sağladığı <code>database.withTransaction { ... }</code>, içindeki tüm veritabanı işlemlerini <b>tek bir atomik birim</b> yapar: hepsi başarılı olur ya da hepsi geri alınır. Burada "görevleri taşı" + "kategoriyi sil" işlemleri birlikte sarılıyor — aradaki bir hata, görevleri sahipsiz (kategorisiz) bırakmasın diye.</div>
+      </div>
+      <pre><code>suspend fun deleteCategory(category: CategoryEntity, fallbackCategoryId: Long) {
+    database.withTransaction {
+        taskDao.moveTasksToCategory(category.id, fallbackCategoryId)
+        categoryDao.deleteCategory(category)
+    }
+}</code></pre>
+      <div class="term">
+        <div class="term-name">Sadece özel kategorilerde silme ikonu</div>
+        <div class="term-def">Varsayılan 4 kategori (<code>isDefault = true</code>) silinemez olmalı. Dropdown'da <code>trailingIcon</code>, <code>if (!category.isDefault) { ... } else null</code> ile sadece kullanıcının eklediği kategorilerde gösteriliyor.</div>
+      </div>
+      <div class="note">
+        Uçtan uca test edildi: "Is" kategorisinin çöp ikonuna basınca <code>"Is" kategorisindeki 1 görev "Kişisel" kategorisine taşınacak. Silmek istiyor musun?</code> mesajı (gerçek görev sayısıyla) çıktı. Onaylayınca kategori silindi, görev listede "Kişisel" kategorisiyle göründü, ve eğer o kategori formda seçiliyse seçim otomatik "Kişisel"e döndü.
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AŞAMA 21 ================= -->
+  <section class="stage" id="asama-21">
+    <div class="stage-head">
+      <span class="stage-num">21</span>
+      <div>
+        <h2 class="stage-title">Arama</h2>
+        <div class="stage-sub">Öğrendiğin: <b>filter, contains(ignoreCase = true)</b></div>
+      </div>
+    </div>
+
+    <div class="terms">
+      <div class="term">
+        <div class="term-name">List.filter { }</div>
+        <div class="term-def">Kotlin'in koleksiyon fonksiyonu: bir listeyi dolaşır, verilen şart <code>true</code> dönen elemanları yeni bir listeye toplar. Burada <code>tasks.filter { task -> ... }</code> ile arama/kategori/durum/önem şartlarının <b>hepsini birden</b> sağlayan görevler seçiliyor.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">contains(ignoreCase = true)</div>
+        <div class="term-def"><code>String.contains</code>'in <code>ignoreCase</code> parametresi <code>true</code> verilirse, <code>"Rapor"</code> ararken <code>"rapor"</code> yazmak da eşleşir. Hem başlıkta hem açıklamada arandığı için şart <code>title.contains(...) || description.contains(...)</code> şeklinde "veya" ile birleştirildi.</div>
+      </div>
+      <pre><code>val matchesQuery = query.isBlank() ||
+    task.title.contains(query, ignoreCase = true) ||
+    task.description.contains(query, ignoreCase = true)</code></pre>
+      <div class="term">
+        <div class="term-name">4'lü combine</div>
+        <div class="term-def"><code>combine(taskFlow, categoryFlow, searchQueryFlow, filterStateFlow) { ... }</code> — <code>Flow.combine</code> ikiden fazla akışı da birleştirebiliyor; herhangi biri değiştiğinde (örneğin kullanıcı arama kutusuna harf yazdığında) tüm blok yeniden çalışıp <code>uiState</code>'i günceller.</div>
+      </div>
+      <div class="note">
+        Uçtan uca test edildi: arama kutusuna küçük harflerle <code>"rapor"</code> yazınca, büyük harfle başlayan <code>"Rapor Hazirla"</code> görevi listede kaldı, <code>"Spor Yap"</code> görevi filtrelendi — büyük/küçük harf duyarsızlığı doğrulandı.
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AŞAMA 22 ================= -->
+  <section class="stage" id="asama-22">
+    <div class="stage-head">
+      <span class="stage-num">22</span>
+      <div>
+        <h2 class="stage-title">Filtreleme (alt panel)</h2>
+        <div class="stage-sub">Öğrendiğin: <b>ModalBottomSheet, FlowRow, BadgedBox, geçici/uygulanan state ayrımı</b></div>
+      </div>
+    </div>
+
+    <div class="terms">
+      <div class="term">
+        <div class="term-name">ModalBottomSheet</div>
+        <div class="term-def">Ekranın altından yukarı kayarak açılan, arka planı karartan panel. Diyalog (<code>AlertDialog</code>) gibi kullanıcıyı kesintiye uğratır ama daha fazla içerik ve kaydırma barındırabilir — filtre seçeneklerinin hepsi burada.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">FlowRow</div>
+        <div class="term-def">Normal <code>Row</code> öğeleri sığmayınca taşar; <code>FlowRow</code> ise sığmayan öğeyi otomatik olarak <b>alt satıra</b> kaydırır. Kategori çiplerinin sayısı değişken olduğu için (kullanıcı kategori eklerse artar) burada <code>Row</code> yerine <code>FlowRow</code> kullanıldı.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">BadgedBox / Badge</div>
+        <div class="term-def">Bir ikonun köşesine küçük bir "rozet" (sayı/nokta) koymanın Material3 yolu. <code>BadgedBox(badge = { if (count > 0) Badge { Text("$count") } }) { IconButton(...) }</code> — filtre ikonunun üstünde aktif filtre sayısını gösteriyor.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Geçici (draft) state vs. uygulanan state</div>
+        <div class="term-def">Panel açıldığında kullanıcının tıkladığı her çip, <b>hemen</b> listeyi filtrelemiyor. <code>FilterSheet</code> kendi <code>remember { mutableStateOf(...) }</code> değişkenlerinde ("draft") tutuyor; sadece <code>"Uygula"</code>ya basınca bu taslak, <code>onApply(FilterState(...))</code> ile ViewModel'in gerçek <code>filterState</code>'ine yazılıyor. Paneli kapatıp "Uygula"ya basmazsan hiçbir şey değişmez.</div>
+      </div>
+      <pre><code>data class FilterState(
+    val categoryId: Long? = null,   // null = "Tümü"
+    val status: TaskStatus? = null,
+    val priority: TaskPriority? = null
+) {
+    val activeCount: Int
+        get() = listOf(categoryId, status, priority).count { it != null }
+}</code></pre>
+      <div class="term">
+        <div class="term-name">Aktif filtreleri çip olarak göstermek</div>
+        <div class="term-def">Panel dışında, arama çubuğunun altında, seçili her filtre için küçük bir <code>FilterChip</code> (sonunda <code>×</code>) gösteriliyor. Çipe tıklamak o filtreyi <code>null</code>'a çekip anında kaldırıyor — paneli açmaya gerek kalmadan.</div>
+      </div>
+      <div class="note">
+        Uçtan uca test edildi: "Kategori: Is" filtresi uygulanınca sadece o kategorideki görev kaldı ve filtre ikonunda "1" rozeti çıktı; aktif filtre çipindeki <code>×</code>'e basınca filtre kalktı ve tüm görevler geri geldi.
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AŞAMA 23 ================= -->
+  <section class="stage" id="asama-23">
+    <div class="stage-head">
+      <span class="stage-num">23</span>
+      <div>
+        <h2 class="stage-title">Sıralama</h2>
+        <div class="stage-sub">Öğrendiğin: <b>sortedBy, compareBy + thenBy, Collator</b></div>
+      </div>
+    </div>
+
+    <div class="terms">
+      <div class="term">
+        <div class="term-name">sortedBy / sortedByDescending / sortedWith</div>
+        <div class="term-def">Kotlin'in hazır sıralama fonksiyonları. <code>sortedBy { it.createdAt }</code> küçükten büyüğe, <code>sortedByDescending</code> tersi sıralar. Daha karmaşık kurallar (örneğin "önce şuna göre, eşitse buna göre") için <code>sortedWith(comparator)</code> kullanılır.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Comparator.thenByDescending</div>
+        <div class="term-def">Bir <code>Comparator</code>'a zincirleme ikinci bir kural eklemenin yolu. <code>titleComparator.thenByDescending { it.createdAt }</code>: önce başlığa göre sırala, <b>başlıklar eşitse</b> en yeniyi öne al. Bu sayede sıralama sonucu her zaman öngörülebilir (belirsiz/rastgele sırada eşit eleman kalmaz).</div>
+      </div>
+      <div class="term">
+        <div class="term-name">java.text.Collator — Türkçe karakter duyarlı sıralama</div>
+        <div class="term-def">Kotlin'in varsayılan String karşılaştırması (<code>"Çay" &lt; "Dolap"</code> gibi) Unicode kod noktalarına bakar, bu da Türkçe'de "I/İ", "Ç", "Ş" gibi harfleri insanların beklediği sırada sıralamayabilir. <code>Collator.getInstance(Locale("tr"))</code>, alfabeyi Türkçe kurallarına göre karşılaştıran özel bir <code>Comparator</code> verir. <code>strength = Collator.SECONDARY</code> ayarı büyük/küçük harf farkını yok sayar.</div>
+      </div>
+      <pre><code>val collator = Collator.getInstance(Locale("tr")).apply { strength = Collator.SECONDARY }
+val titleComparator = Comparator&lt;TaskEntity&gt; { a, b -> collator.compare(a.title, b.title) }
+
+filtered.sortedWith(titleComparator.thenByDescending { it.createdAt })</code></pre>
+      <div class="term">
+        <div class="term-name">DropdownMenuItem içinde seçili işareti</div>
+        <div class="term-def"><code>SortMenu</code>'de her seçeneğin <code>trailingIcon</code>'u, sadece o seçenek şu an aktifse bir <code>Icons.Filled.Check</code> gösteriyor — <code>if (option == selected) { Icon(...) }</code>. Basit bir koşullu render örneği.</div>
+      </div>
+      <div class="note">
+        Uçtan uca test edildi: "Armut Topla" (Yüksek), "Çay Demle" (Orta), "Zeytin Al" (Düşük) görevleriyle 5 sıralama seçeneğinin hepsi denendi — "A → Z" Türkçe karakterlerle doğru sıraladı, "Önem" önce Yüksek'i gösterdi.
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AŞAMA 24 ================= -->
+  <section class="stage" id="asama-24">
+    <div class="stage-head">
+      <span class="stage-num">24</span>
+      <div>
+        <h2 class="stage-title">Arama + Filtre + Sıralama Birlikte</h2>
+        <div class="stage-sub">Öğrendiğin: <b>5'li combine, saf fonksiyon (pure function)</b></div>
+      </div>
+    </div>
+
+    <div class="terms">
+      <div class="term">
+        <div class="term-name">Saf fonksiyon (pure function)</div>
+        <div class="term-def">Girdisi aynıysa çıktısı her zaman aynı olan, dış dünyaya dokunmayan (veritabanı okumayan, state değiştirmeyen) fonksiyon. <code>TaskFilter.apply(tasks, query, filters, sortOption)</code> tam olarak böyle: sadece verilen listeyi işleyip yeni bir liste döndürür. Bu, onu <b>ViewModel'den bağımsız olarak</b> test edilebilir yapar (29. Aşama'da unit test yazılacak kısım tam da burası).</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Mantığı ViewModel'den ayırmanın faydası</div>
+        <div class="term-def">Filtreleme+sıralama mantığı önceden <code>TaskListViewModel</code>'in içine gömülüydü. <code>util/TaskFilter.kt</code>'ye taşınınca ViewModel sadece "hangi veriyi, hangi ayarlarla çağıracağım" ile ilgilenir; <b>nasıl</b> filtrelenip sıralanacağı ayrı, okunaklı bir yerde durur.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">5 parametreli combine</div>
+        <div class="term-def">kotlinx.coroutines.flow.combine'ın 5 akışı birden birleştiren hazır bir sürümü var: <code>combine(tasks, categories, searchQuery, filterState, sortOption) { ... }</code>. Beşinden biri değiştiğinde (arama kutusuna yazı girilse de, sıralama değiştirilse de) blok yeniden çalışır.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">clearAllFilters()</div>
+        <div class="term-def">Hem arama metnini hem filtre seçimlerini tek seferde sıfırlayan yardımcı fonksiyon — sıralama seçimine <b>dokunmuyor</b> (sıralama bir "filtre" değil, kullanıcı tercihi olarak ayrı tutuluyor).</div>
+      </div>
+      <div class="note">
+        Uçtan uca test edildi: sıralama "Önem" seçiliyken arama kutusuna harf yazınca sonuç sayısı ("X görev bulundu") anında güncellendi; sonuç bulunmayan bir arama yapılınca "Sonuç bulunamadı" + "Filtreleri temizle" göründü, temizleyince tüm görevler geri geldi.
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AŞAMA 25 ================= -->
+  <section class="stage" id="asama-25">
+    <div class="stage-head">
+      <span class="stage-num">25</span>
+      <div>
+        <h2 class="stage-title">Profil İstatistikleri</h2>
+        <div class="stage-sub">Öğrendiğin: <b>count { }, ekranlar arası veri aktarma</b></div>
+      </div>
+    </div>
+
+    <div class="terms">
+      <div class="term">
+        <div class="term-name">List.count { }</div>
+        <div class="term-def"><code>tasks.count { it.status == TaskStatus.TODO }</code> — listeyi dolaşıp şartı sağlayan eleman <b>sayısını</b> döndürür (<code>filter {}.size</code> ile aynı sonucu verir ama ara liste oluşturmadığı için daha hafiftir).</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Ekranlar arası veri aktarma — neden NavBackStackEntry değil?</div>
+        <div class="term-def">Önce Profil'deki bir karta tıklayınca Görevler'i filtrelenmiş açmak için 19. Aşama'daki <code>previousBackStackEntry.savedStateHandle</code> tekniği denendi — ama test sırasında çalışmadı. Sebep: alt menü (bottom-nav) sekmeleri arasında geçişte <code>popUpTo(...){ saveState = true }</code> kullanılıyor; bu, hedef ekranın <code>NavBackStackEntry</code>'sini back stack'ten geçici olarak <b>çıkarıp sakladığı</b> için, <code>navController.getBackStackEntry(...)</code> ile elde edilen nesne, ekran gerçekten geri yüklendiğinde kullanılan nesneyle her zaman aynı olmayabiliyor.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Gerçek çözüm: AppContainer'da paylaşılan MutableStateFlow</div>
+        <div class="term-def"><code>AppContainer</code> uygulamanın tüm ömrü boyunca tek bir nesne (Application sınıfı tarafından tutuluyor) — bu yüzden navigasyonun karmaşık zamanlamasından bağımsız, basit bir "posta kutusu" olarak kullanılabilir: <code>val pendingTaskStatusFilter = MutableStateFlow&lt;TaskStatus?&gt;(null)</code>. Profil, tıklanan durumu buraya yazar; Görevler ekranı açılışında oradan okuyup uygular, sonra sıfırlar.</div>
+      </div>
+      <pre><code>// ProfileScreen -> Görevler'e geçerken
+onStatClick = { status ->
+    container.pendingTaskStatusFilter.value = status
+    navController.navigate(Screen.TaskList.route) { ... }
+}
+
+// TaskListScreen -> açılışta oku ve uygula
+LaunchedEffect(initialStatusFilter) {
+    if (initialStatusFilter != null) {
+        viewModel.applyInitialStatusFilter(initialStatusFilter)
+        onInitialStatusFilterConsumed()
+    }
+}</code></pre>
+      <div class="note">
+        <b>Gerçek bir hata yakalandı ve çözüldü:</b> İlk denemede "Devam Ediyor" kartına tıklanınca Görevler açılıyordu ama filtre <b>hiç uygulanmıyordu</b> (ne filtre çipi ne rozet görünüyordu). ADB ile ekran durumu incelenerek kök neden (NavBackStackEntry'nin saveState/restoreState sırasında güvenilmez olması) bulundu ve yukarıdaki AppContainer tabanlı çözümle düzeltildi — tıpkı 15. Aşama'daki SavedStateHandle hatası gibi, "her navigasyon tekniği her senaryoda işe yaramıyor" dersi burada da tekrarlandı.
+      </div>
+      <div class="note">
+        Uçtan uca test edildi: bir görevin durumu değiştirilince Profil'deki sayılar (Toplam/Yapılacak/Devam Ediyor/Tamamlandı) anında güncellendi; "Devam Ediyor" kartına tıklanınca Görevler sekmesi "1 görev bulundu" ve aktif "Devam Ediyor" filtre çipiyle açıldı.
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AŞAMA 26 ================= -->
+  <section class="stage" id="asama-26">
+    <div class="stage-head">
+      <span class="stage-num">26</span>
+      <div>
+        <h2 class="stage-title">Ayarlar (tema ve varsayılan sıralama)</h2>
+        <div class="stage-sub">Öğrendiğin: İkinci DataStore, Switch, RadioButton, temayı uygulama genelinde değiştirmek</div>
+      </div>
+    </div>
+
+    <div class="terms">
+      <div class="term">
+        <div class="term-name">Neden ikinci bir DataStore?</div>
+        <div class="term-def"><code>SessionManager</code> zaten bir DataStore kullanıyordu (<code>"session_prefs"</code>) ama o, oturumla ilgili verileri (userId, isim, email) tutmak için. Tema/sıralama tercihleri kavramsal olarak farklı bir şey olduğundan (kullanıcıdan bağımsız, cihaza özel ayarlar), ayrı bir dosyada — <code>"settings_prefs"</code> — tutuluyor. Her <code>preferencesDataStore</code> kendi dosyasını yönetir, birbirine karışmaz.</div>
+      </div>
+      <pre><code>val Context.settingsDataStore by preferencesDataStore(name = "settings_prefs")
+
+class SettingsManager(private val context: Context) {
+    private val DARK_THEME = booleanPreferencesKey("dark_theme")
+    private val DEFAULT_SORT = stringPreferencesKey("default_sort")
+    ...
+}</code></pre>
+      <div class="term">
+        <div class="term-name">Switch</div>
+        <div class="term-def">Material3'ün açma/kapama anahtarı. <code>Switch(checked = uiState.darkTheme, onCheckedChange = viewModel::onDarkThemeChange)</code> — <code>checked</code> her zaman state'ten okunur (tek yönlü veri akışı), kullanıcı dokununca <code>onCheckedChange</code> çağrılır, state'i biz güncelleriz.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">RadioButton + AlertDialog = seçim listesi</div>
+        <div class="term-def">5 sıralama seçeneğinden birini seçtirmek için <code>AlertDialog</code>'un <code>text</code> slotuna, her biri bir <code>RadioButton</code> içeren satırlardan oluşan bir <code>Column</code> konuldu. <code>selected = uiState.defaultSort == option</code> ile aktif seçenek işaretli gösteriliyor.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Temayı uygulama genelinde değiştirmek</div>
+        <div class="term-def"><code>MainActivity</code>, <code>setContent{}</code> içinde <code>settingsManager.darkThemeFlow.collectAsState(initial = isSystemInDarkTheme())</code> ile tema tercihini okuyup <code>My_AppTheme(darkTheme = darkTheme){ AppNavGraph() }</code>'e veriyor. Tüm ekranlar aynı <code>AppNavGraph</code>'ın içinde olduğu için, DataStore'daki değer değiştiği an <b>bütün uygulama</b> yeniden renklenir — tek bir yerden kontrol edilen bir "tema anahtarı".</div>
+      </div>
+      <div class="term">
+        <div class="term-name">BuildConfig.VERSION_NAME</div>
+        <div class="term-def"><code>app/build.gradle.kts</code>'deki <code>versionName = "1.0"</code> değerine koddan erişmek için <code>buildFeatures { buildConfig = true }</code> açılması gerekiyor. Açılınca Gradle, derleme sırasında otomatik bir <code>BuildConfig</code> sınıfı üretir; <code>BuildConfig.VERSION_NAME</code> bu değeri verir.</div>
+      </div>
+      <div class="note">
+        Uçtan uca test edildi: "Karanlık tema" açılınca tüm uygulama (durum çubuğu, alt menü, tüm ekranlar) anında koyu temaya geçti; "Önem" varsayılan sıralama seçilip uygulama tamamen kapatılıp (force-stop) yeniden açıldığında hem karanlık tema hem "Önem" sıralaması korunmuş olarak geldi — DataStore'un kalıcılığı doğrulandı.
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AŞAMA 27 ================= -->
+  <section class="stage" id="asama-27">
+    <div class="stage-head">
+      <span class="stage-num">27</span>
+      <div>
+        <h2 class="stage-title">Loading, Hata ve Boş Liste Durumları</h2>
+        <div class="stage-sub">Öğrendiğin: try-catch, Flow.catch, koşullu UI</div>
+      </div>
+    </div>
+
+    <div class="terms">
+      <div class="term">
+        <div class="term-name">Flow.catch</div>
+        <div class="term-def">Normal <code>try-catch</code>, bir <code>Flow</code>'un içinde <b>çalışmaz</b> (Flow'lar askıya alınabilir/asenkron olduğu için). Bunun yerine <code>Flow.catch { exception -> ... }</code> operatörü kullanılır — akış içinde bir hata fırlatılırsa yakalanır ve istenirse <code>emit(...)</code> ile yerine başka bir değer (örneğin hata durumunu taşıyan bir UiState) gönderilebilir.</div>
+      </div>
+      <pre><code>combine(...) { ... }
+    .catch { e -> emit(TaskListUiState(isLoading = false, errorMessage = e.message)) }
+    .stateIn(...)</code></pre>
+      <div class="term">
+        <div class="term-name">Yeniden deneme (retry) deseni</div>
+        <div class="term-def">Reaktif bir <code>Flow</code> zinciri hata verdiğinde "tekrar dene" butonu nasıl bir şey yapar? Çözüm: bir <code>_retryTrigger = MutableStateFlow(0)</code> eklenip, bu da akış zincirinin başına (<code>flatMapLatest</code>'in anahtarına) dahil edilir. <code>retry()</code> çağrıldığında sayaç artar, <code>flatMapLatest</code> yeniden tetiklenir ve alttaki akışlara (Room sorguları) <b>yeniden abone olunur</b>.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">ErrorView / EmptyView — yeniden kullanılabilir durum bileşenleri</div>
+        <div class="term-def">19. Aşama'da <code>ConfirmDialog</code> ile tanıştığımız "tek bileşen, çok yerde kullan" fikri burada tekrarlandı: <code>ErrorView(message, onRetry)</code> ve <code>EmptyView(icon, title, message, actionLabel?, onAction?)</code> tüm listeleme ekranlarında (Görevler, Profil, Detay) aynı görünümle kullanılıyor.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">İki farklı "boş" durumu ayırt etmek</div>
+        <div class="term-def"><code>TaskListScreen</code>'de boş liste iki farklı anlama gelebilir: (1) kullanıcının hiç görevi yok → "Henüz görev yok, + ile ekle"; (2) arama/filtre sonucu boş → "Sonuç bulunamadı, filtreleri temizle". Hangisinin gösterileceği <code>searchQuery.isNotBlank() || filterState.activeCount > 0</code> şartıyla ayrılıyor — aynı "liste boş" durumunun <b>farklı nedenleri farklı mesaj hak eder</b>.</div>
+      </div>
+      <div class="note">
+        Uçtan uca test edildi: yeni kayıt olan bir kullanıcı giriş yaptığında "Henüz görev yok" mesajı + FAB ile yönlendirme göründü; dolu bir listede anlamsız bir arama yapılınca "Sonuç bulunamadı" + "Filtreleri temizle" göründü ve butona basınca liste normale döndü.
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AŞAMA 28 ================= -->
+  <section class="stage" id="asama-28">
+    <div class="stage-head">
+      <span class="stage-num">28</span>
+      <div>
+        <h2 class="stage-title">Form Hatalarını Kullanıcı Dostu Yapma</h2>
+        <div class="stage-sub">Öğrendiğin: strings.xml, @StringRes, FocusManager, ImeAction</div>
+      </div>
+    </div>
+
+    <div class="terms">
+      <div class="term">
+        <div class="term-name">strings.xml ve neden önemli</div>
+        <div class="term-def">Önceden hata mesajları (<code>"Ad boş olamaz"</code> gibi) doğrudan Kotlin kodunun içinde yazılıydı. <code>res/values/strings.xml</code>'e taşınınca: (1) aynı metin birden fazla yerde tekrar yazılmaz, (2) ileride başka bir dile çevirmek istenirse sadece bu dosyanın bir kopyası (<code>values-en/strings.xml</code> gibi) yeterli olur, (3) Android Studio'nun metin araçları (arama, kullanılmayanı bulma) çalışabilir.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">@StringRes Int? — metin yerine "metnin adresi"</div>
+        <div class="term-def"><code>Validators.validateName(name): Int?</code> artık doğrudan <code>String</code> değil, <code>R.string.error_name_blank</code> gibi bir <b>kaynak numarası</b> (<code>Int</code>) döndürüyor. <code>@StringRes</code> anotasyonu bu Int'in "rastgele bir sayı değil, geçerli bir string kaynağı olmalı" dediğini Android Studio'ya ve lint'e bildirir. Ekranda gerçek metne çevirmek için Composable içinde <code>stringResource(id)</code> çağrılır.</div>
+      </div>
+      <pre><code>// util/Validators.kt
+fun validateName(name: String): Int? {
+    if (name.isBlank()) return R.string.error_name_blank
+    ...
+}
+
+// RegisterScreen.kt
+supportingText = {
+    if (uiState.nameError != null) Text(stringResource(uiState.nameError!!))
+}</code></pre>
+      <div class="term">
+        <div class="term-name">FocusManager + ImeAction</div>
+        <div class="term-def"><code>LocalFocusManager.current</code>, kodla "hangi alan odakta" kontrolünü sağlar. Her <code>TextField</code>'a <code>keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)</code> ve <code>keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) })</code> verilince, klavyedeki "İleri" tuşu bir sonraki alana otomatik geçiyor. Son alanda <code>ImeAction.Done</code> + <code>onDone</code> ile doğrudan formu gönderiyoruz.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">verticalScroll + imePadding</div>
+        <div class="term-def">Uzun formlarda (Kayıt Ol gibi) klavye açılınca alt butonlar ekran dışına taşabilir. <code>Modifier.verticalScroll(rememberScrollState()).imePadding()</code> ikilisi: formu kaydırılabilir yapar (<code>verticalScroll</code>) ve klavye açıldığında içeriği klavyenin üstünde kalacak kadar yukarı iter (<code>imePadding</code>).</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Hata yokken ipucu göstermek</div>
+        <div class="term-def">Şifre alanının <code>supportingText</code>'i artık iki hali var: hata varsa hatayı, yoksa <code>stringResource(R.string.hint_password_min_length)</code> ("En az 6 karakter") gösteriyor. Kullanıcı hataya düşmeden önce kuralı öğreniyor — "önce uyar, sonra azarla" prensibi.</div>
+      </div>
+      <div class="note">
+        Uçtan uca test edildi: boş kayıt formu gönderilince "Ad boş olamaz", "E-posta boş olamaz", "Şifre boş olamaz", "Şifre tekrarı boş olamaz" mesajlarının hepsi <code>strings.xml</code>'den doğru şekilde ekrana geldi; şifre alanına hiç dokunulmadan "En az 6 karakter" ipucu görüldü.
+      </div>
+    </div>
+  </section>
+
   <!-- ================= EK A ================= -->
   <section class="stage" id="ek-a">
     <span class="appendix-tag">Ek · Bugünkü Pratik Ders</span>
@@ -940,6 +1629,171 @@ selected = currentRoute == item.route</code></pre>
     </div>
   </section>
 
-  <footer>Görevlerim projesi üzerinden, adım adım. · Aşama 12 tamamlandı.</footer>
+  <!-- ================= EK C ================= -->
+  <section class="stage" id="ek-c">
+    <span class="appendix-tag">Ek · Ürünleşme</span>
+    <h2 class="stage-title" style="margin-top:0;">Kategori Izgarası (Ana Ekran Tasarımı)</h2>
+    <div class="stage-sub">PM'nin roadmap'inde yoktu — kullanıcı doğrudan "ana ekranda kategoriler kare kare görünsün" isteğiyle talep etti.</div>
+    <div class="terms">
+      <div class="term">
+        <div class="term-name">LazyVerticalGrid + GridCells.Fixed(2)</div>
+        <div class="term-def"><code>LazyColumn</code>'un ızgara (grid) hâli. <code>GridCells.Fixed(2)</code>: her satırda tam olarak 2 öğe olsun der. <code>itemsIndexed</code> ile hem öğeyi hem sırasını (index) birlikte alabiliyoruz — index, eşleşen bir anahtar kelime yoksa renk paletinden hangi rengin seçileceğini belirlemekte kullanıldı.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Modifier.aspectRatio(1f) — gerçek kare</div>
+        <div class="term-def">Ekran genişliği ne olursa olsun (telefon/tablet, dikey/yatay) kartın eni ile boyu her zaman birbirine eşit kalsın diye kullanıldı. "1f" oran 1:1 demek, yani kare.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Kategori adından ikon+renk çıkarmak — CategoryVisuals</div>
+        <div class="term-def">Kullanıcı istediği zaman yeni kategori oluşturabildiği için (17. Aşama) her kategoriye elle bir ikon atamak mümkün değil. Bunun yerine <code>util/CategoryVisuals.kt</code>, bilinen anahtar kelimelerden (spor, iş, ev, sağlık...) oluşan bir liste tutuyor; eşleşme yoksa dönen bir renk paletinden bir renk + genel bir etiket ikonu veriyor.</div>
+      </div>
+      <pre><code>private val keywordMap: List&lt;Pair&lt;String, CategoryVisual&gt;&gt; = listOf(
+    "spor" to CategoryVisual(Icons.Filled.SportsSoccer, Color(0xFF43A047)),
+    "iş" to CategoryVisual(Icons.Filled.Work, Color(0xFF1E88E5)),
+    ...
+)</code></pre>
+      <div class="term">
+        <div class="term-name">Card(onClick = ...)</div>
+        <div class="term-def">Material3'ün <code>Card</code> composable'ının, ayrıca <code>Modifier.clickable</code> eklemeye gerek bırakmayan hazır bir "tıklanabilir kart" sürümü — hem doğru ripple (dokunma) animasyonunu hem erişilebilirlik (accessibility) davranışını otomatik verir.</div>
+      </div>
+      <div class="note">
+        <b>Gerçek bir hata yakalandı ve çözüldü:</b> İlk versiyonda "İş" kategorisi kendi ikonunu almıyor, bunun yerine "Kişisel" ve "Alışveriş" yanlışlıkla iş çantası ikonunu alıyordu. İki ayrı kök neden vardı:<br><br>
+        <b>1) Türkçe büyük İ sorunu:</b> Kotlin'in <code>String.lowercase()</code> (parametresiz hâli) kök (root) locale kullanır; bu locale'de büyük <b>İ</b> harfi küçültülünce düz <code>"i"</code> değil, <code>"i" + görünmez birleşen nokta işareti (U+0307)</code> üretir. Yani <code>"İş".lowercase()</code> beklediğimiz <code>"iş"</code> değildi, bu yüzden "İş" kategorisi kendi "iş" anahtar kelimesiyle eşleşmiyordu. <b>Çözüm:</b> <code>name.lowercase(Locale("tr"))</code> — Türkçe'ye özel kurallarla küçültme.<br><br>
+        <b>2) Alt-dize (substring) tuzağı:</b> <code>"Kişisel"</code> ve <code>"Alışveriş"</code> kelimelerinin içinde, anlamsal olarak hiç ilgisi olmadığı hâlde, harfler tesadüfen yan yana gelip <code>"iş"</code> alt-dizesini oluşturuyordu (<b>k-i-ş-i-s-e-l</b> → "iş" pozisyon 1-2'de var!). <code>lower.contains(keyword)</code> bunu da eşleşme sayıyordu. <b>Çözüm:</b> Alt-dize yerine kelimeyi boşluk/noktalama işaretlerinden ayırıp <b>tam kelime eşleşmesi</b> aranması (<code>words.any { it == keyword }</code>).<br><br>
+        Bu iki hata da ADB ile ekran görüntüsü alınarak (önce yanlış ikonlar fark edildi) ve kodu adım adım yeniden okuyarak bulundu — bir string fonksiyonunun "aşikâr" davranışının, Türkçe gibi özel alfabeler söz konusu olunca aslında hiç aşikâr olmayabileceğinin iyi bir örneği.
+      </div>
+      <div class="note">
+        Uçtan uca test edildi: Spor kategorisi yeşil top ikonu, İş mavi çanta, Kişisel mor kişi, Alışveriş turuncu sepet ikonu aldı; bir kategoriye tıklayınca o kategoriyle filtrelenmiş Görevler listesi (geri okuyla) açıldı.
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= EK D ================= -->
+  <section class="stage" id="ek-d">
+    <span class="appendix-tag">Ek · Ürünleşme</span>
+    <h2 class="stage-title" style="margin-top:0;">Galeriden Görsel Ekleme</h2>
+    <div class="stage-sub">Profil fotoğrafı, kategori görseli ve görev fotoğrafı — üçü de aynı altyapıyı paylaşıyor.</div>
+    <div class="terms">
+      <div class="term">
+        <div class="term-name">Photo Picker (ActivityResultContracts.PickVisualMedia)</div>
+        <div class="term-def">Android'in yerleşik, güvenli galeri seçicisi. Klasik yöntemlerin aksine <b>hiçbir izin (permission) istemeye gerek yok</b> — sistem, kullanıcının seçtiği <i>tek</i> dosya için uygulamaya geçici erişim veriyor, galerinin tamamına değil.</div>
+      </div>
+      <pre><code>@Composable
+fun rememberImagePickerLauncher(onImagePicked: (Uri) -> Unit): () -> Unit {
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { uri -> if (uri != null) onImagePicked(uri) }
+
+    return { launcher.launch(PickVisualMediaRequest(...ImageOnly)) }
+}</code></pre>
+      <div class="term">
+        <div class="term-name">Neden yeniden kullanılabilir bir fonksiyon?</div>
+        <div class="term-def">Bu seçici üç farklı ekranda (Profil, Kategori kartı, Görev formu) kullanılıyor. <code>ui/components/ImagePicker.kt</code>'deki <code>rememberImagePickerLauncher</code>, bir <code>@Composable</code> fonksiyon olarak tanımlanıp her üç yerde de tek satırla çağrılabiliyor — 19/27. Aşama'larda <code>ConfirmDialog</code>/<code>ErrorView</code> ile kurulan "ortak bileşen" alışkanlığının devamı.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">Seçilen dosyayı kendi alanımıza kopyalamak</div>
+        <div class="term-def">Galerinin verdiği <code>content://</code> adresi (Uri) her zaman kalıcı/güvenilir olmayabilir. <code>util/ImageStorage.kt</code>, dosyanın baytlarını okuyup uygulamanın kendi özel klasörüne (<code>filesDir/images/</code>) kopyalıyor ve bu yeni, kalıcı dosya yolunu (düz bir <code>String</code>) döndürüyor — Room'da saklanan da bu yol.</div>
+      </div>
+      <pre><code>suspend fun save(context: Context, uri: Uri, prefix: String): String =
+    withContext(Dispatchers.IO) {
+        val file = File(File(context.filesDir, "images").apply { mkdirs() }, "$prefix_${'$'}{UUID.randomUUID()}.jpg")
+        context.contentResolver.openInputStream(uri)?.use { input ->
+            file.outputStream().use { output -> input.copyTo(output) }
+        }
+        file.absolutePath
+    }</code></pre>
+      <div class="term">
+        <div class="term-name">Coil ve AsyncImage</div>
+        <div class="term-def">Compose'un kendi <code>Image</code> composable'ı sadece hazır bitmap/vector gösterir; bir dosya yolundan resmi okuyup belleğe yüklemek (ve ekran dışına çıkınca bellekten atmak) elle yazılması zahmetli bir iş. <b>Coil</b> kütüphanesi bunu <code>AsyncImage(model = ..., contentDescription = ...)</code> tek satırıyla hallediyor.</div>
+      </div>
+      <div class="note">
+        <b>Gerçek bir hata yakalandı ve çözüldü:</b> İlk denemede seçilen fotoğraflar hiçbir yerde görünmedi — kategori dairesi boş kaldı, ikon da kayboldu. Sebep: <code>AsyncImage(model = imagePath, ...)</code>'e düz bir dosya yolu <b>String</b>'i (<code>"/data/data/.../images/category_1.jpg"</code>) veriliyordu. Coil, bir <code>String</code> aldığında önce bunu URL mi, <code>content://</code> Uri mi, yoksa başka bir şey mi diye yorumlamaya çalışıyor; şema (http://, content:// gibi bir önek) olmayan "çıplak" bir dosya yolu bu otomatik yorumlamadan her zaman doğru geçemiyor. <b>Çözüm:</b> Coil'e String yerine doğrudan <code>File(imagePath)</code> nesnesi vermek — Coil, <code>File</code> tipini özel bir yorumlamaya gerek duymadan, doğrudan ve güvenilir şekilde okuyor.</div>
+      </div>
+      <div class="note">
+        Uçtan uca test edildi: emülatöre ADB ile iki test fotoğrafı (`adb push` + medya tarayıcı broadcast'i) eklenip gerçek Foto Seçici üzerinden seçildi — profil fotoğrafı, kategori görseli ve görev fotoğrafı üçü de kaydedilip hem küçük (liste/kart) hem büyük (detay) boyutlarda doğru görüntülendi.
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= EK E ================= -->
+  <section class="stage" id="ek-e">
+    <span class="appendix-tag">Ek · Ürünleşme</span>
+    <h2 class="stage-title" style="margin-top:0;">Mockup'tan Uygulamaya: Tasarım Yenileme</h2>
+    <div class="stage-sub">Instagram'da görülen bir "Rude Olive" marka gönderisinden gerçek Pantone renkleri (krem, indigo, bordo) alınıp, bir AI tasarım aracında 10 ekranın (×açık/koyu) mockup'ı üretildi; bu bölüm o mockup'ı birebir koda dökme sürecini anlatıyor.</div>
+    <div class="terms">
+      <div class="term">
+        <div class="term-name">Pantone'dan ColorScheme'e</div>
+        <div class="term-def">Üç Pantone kodu (krem, indigo, bordo) referans alınıp <code>Color.kt</code>'de aile aile token'lara dönüştürüldü: her renk için <code>Light</code>/<code>Dark</code> çifti, konteyner (<code>Container</code>) ve metin (<code>On...</code>) varyantlarıyla birlikte. Material3'ün <b>tüm</b> <code>ColorScheme</code> alanları (sadece primary/secondary değil — <code>surfaceContainer*</code>, <code>inverseSurface</code> dahil) dolduruldu; boş bırakılan herhangi bir alan, sistemin varsayılan mor rengine sessizce geri düşüyor — bu, önceki bir aşamada zaten öğrenilmiş bir dersti.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">isDark-aware fonksiyonlar — tema token'ına değil, duruma göre renk</div>
+        <div class="term-def"><code>MaterialTheme.colorScheme.background.luminance() &lt; 0.5f</code> ile "şu an koyu modda mıyız" bilgisi hesaplanıp, <code>TaskStatus.containerColor(isDark: Boolean)</code> gibi fonksiyonlara parametre olarak geçiliyor. Bunun <code>MaterialTheme.colorScheme</code>'den farkı: durum rozetleri (TODO/Devam/Tamamlandı) gibi <i>anlamsal</i> renklerin, tema'nın birincil/ikincil renklerinden bağımsız, kendi açık/koyu çiftine sahip olabilmesi.</div>
+      </div>
+      <pre><code>fun TaskStatus.containerColor(isDark: Boolean): Color = when (this) {
+    TODO -> if (isDark) StatusTodoBgDark else StatusTodoBgLight
+    DONE -> if (isDark) StatusDoneBgDark else StatusDoneBgLight
+    ...
+}</code></pre>
+      <div class="term">
+        <div class="term-name">combinedClickable — tek dokunuş vs. uzun basış</div>
+        <div class="term-def">Kart bileşenlerine (kategori kartı, görev kartı) hem normal tıklama hem <b>uzun basınca silme onayı açma</b> davranışı eklendi. <code>Modifier.clickable</code>'ın sadece <code>onClick</code>'i var; <code>combinedClickable(onClick = ..., onLongClick = ...)</code> ikisini birden tanımlar. Deneysel (experimental) bir API olduğu için <code>@OptIn(ExperimentalFoundationApi::class)</code> gerektirir.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">android.app.DatePickerDialog + Calendar</div>
+        <div class="term-def">Görev bitiş tarihi seçimi için Compose'un deneysel M3 <code>DatePicker</code>'ı yerine, klasik Android'in yerleşik <code>DatePickerDialog</code>'u tercih edildi — daha az kod, dokunmatik etkileşimi zaten olgun. Bedeli: bu dialog <b>sistem temasını</b> kullanıyor, uygulamanın krem/indigo paletini miras almıyor (ekranda yeşil-teal bir takvim açılıyor). Bilinçli bir ödünleşim: çalışması, görsel bütünlükten önde tutuldu.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">EmojiPickerDialog + CategoryEntity.emoji</div>
+        <div class="term-def">Fotoğrafa alternatif olarak, kategoriye tek bir emoji atanabiliyor artık. <code>CategoryEntity</code>'ye <code>emoji: String?</code> eklendi; <code>imagePath</code> ve <code>emoji</code> aynı anda dolu olmasın diye <code>CategoryDao.updateVisual(...)</code> ikisini <b>birlikte</b> güncelleyen tek bir sorgu — biri seçilince diğeri otomatik <code>null</code>'a çekiliyor.</div>
+      </div>
+      <div class="term">
+        <div class="term-name">AddCategoryCard — ızgaranın kendisinden kategori eklemek</div>
+        <div class="term-def">Önceden kategori sadece "Görev Ekle" formundan oluşturulabiliyordu. <code>LazyVerticalGrid</code>'in son öğesi olarak sabit bir <code>AddCategoryCard</code> (+ Yeni Kategori) eklenerek, aynı <code>NewCategoryDialog</code> hem ızgaradan hem formdan açılabilir hale getirildi — tek bileşen, iki giriş noktası.</div>
+      </div>
+    </div>
+
+    <div class="note">
+      <b>Gerçek hatalar yakalandı ve çözüldü — bu sefer başka bir AI araçla birlikte çalışırken:</b> Kullanım limiti dolup devam edemediğim bir süre boyunca, kullanıcı paralel olarak başka bir AI aracı (Antigravity) kullanarak mockup'ı uygulamaya işlemeye devam etmiş. Limit açılınca ilk işim, o değişiklikleri satır satır okuyup <b>hem derleme hatalarını hem "bizim işleyişimize uymayan" kısımları</b> ayıklamaktı. Bulunanlar:
+      <br><br>
+      <b>1) Geçersiz sözdizimi:</b> <code>CategoryCard.kt</code> ve <code>TaskItem.kt</code>'de <code>.androidx.compose.foundation.combinedClickable(...)</code> yazılmıştı — tam nitelikli (fully-qualified) bir isim, <code>import</code> edilmeden, zincirleme bir nokta (<code>.</code>) ile bir <code>Modifier</code> zincirine eklenmeye çalışılmıştı. Kotlin'de bu geçerli değil; fonksiyon ya <code>import</code> edilip kısa adıyla, ya da tam yoluyla <b>bağımsız bir ifade</b> olarak çağrılabilir, bir metod zincirinin ortasına tam yoluyla "yapıştırılamaz". Çözüm: doğru <code>import</code>'ları eklemek.<br><br>
+      <b>2) Eksik import'lar:</b> <code>CategoryRepository.kt</code>'de <code>kotlinx.coroutines.flow.first</code>, <code>CategoryGridScreen.kt</code>'de <code>ConfirmDialog</code>, <code>TaskListScreen.kt</code>'de <code>HorizontalDivider</code> — üçü de derlemeyi tamamen durduruyordu.<br><br>
+      <b>3) Ölü kod:</b> <code>if (isDark) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.surface</code> gibi, iki dalı da aynı değeri döndüren anlamsız koşullar birkaç yerde bulundu ve sadeleştirildi — derleme hatası değil ama "neden burada bir <code>if</code> var" diye soracak bir okuyucuya gereksiz kafa karışıklığı.<br><br>
+      <b>4) Sahte/mockup verisi gerçek kullanıcıya sızmış:</b> "Merhaba, {isim}" karşılamasında isim boşsa <code>"Deniz"</code> yazıyordu; Profil ekranında isim/e-posta/üyelik tarihi boşsa sahte <code>"Deniz Yılmaz"</code>, <code>"deniz.yilmaz@mail.com"</code> gibi mockup verileri gösteriliyordu. Bunlar tasarım aracının örnek verileriydi, koda olduğu gibi kopyalanmıştı. Çözüm: boşsa sahte veri göstermek yerine, o alanı sade bir şekilde atlamak.
+    </div>
+
+    <div class="note">
+      <b>Gerçek bir hata yakalandı ve çözüldü — eldeki iki bileşenin çakışması (uçtan uca test sırasında):</b> Kategori ızgarasının son satırı ile sağ alttaki "Yeni görev" FAB'ı görsel olarak üst üste biniyordu; dokunuşlar yanlış bileşene gidiyordu.
+      <br><br>
+      <b>Yanlış çözüm (önce denendi):</b> <code>LazyVerticalGrid</code>'in <code>contentPadding</code>'ine alttan boşluk eklemek işe yaramadı — çünkü ızgaranın içeriği (6 kare kart) zaten görünür alandan <i>kısaydı</i>; öğeler üstten yerleşip altta kullanılmayan boşluk bırakıyordu, <code>contentPadding</code>'in eklediği pay da bu "zaten var olan ama görünmeyen" fazlalığa katılıp hiçbir görsel fark yaratmıyordu.
+      <br><br>
+      <b>Doğru çözüm:</b> Izgaranın kendi <code>Modifier.padding(bottom = ...)</code>'i ile <b>kutunun gerçek boyutunu</b> küçültmek — bu, içerik kaydırmasından bağımsız, gerçek/fiziksel bir boşluk bırakıyor.
+      <div class="term-why"><b>Ders:</b> <code>contentPadding</code> (kaydırılabilir içeriğin kenarlarına pay) ile <code>Modifier.padding</code> (bileşenin kendi dış sınırına pay) birbirinin yerine geçmez — içerik, kendisine ayrılan alandan zaten küçükse, sadece ikincisi görünür bir fark yaratır.</div>
+    </div>
+
+    <div class="note">
+      <b>Gerçek bir hata yakalandı ve çözüldü — en can alıcısı: geçici (ephemeral) state'in navigasyonda kaybolması:</b> Bir kategoriye girip (örn. "Ev & Yaşam") oradan yeni bir görev ekleyip kaydedince, ekran başlığı doğru kategori adı yerine <code>"Tüm Görevler"</code>'e dönüyordu — filtre hâlâ doğruydu (kategori hâlâ uygulanıyordu), ama başlık/alt başlık yanlıştı.
+      <br><br>
+      <b>Kök neden:</b> Hangi kategoride olduğumuzu tutan değişken, <code>remember { mutableStateOf(...) }</code> ile ekranın <i>geçici</i> state'inde tutuluyordu. Navigation-Compose'da bir ekranın üstüne yeni bir ekran (<code>AddEditTaskScreen</code>) açılıp geri dönüldüğünde, alttaki ekranın composable fonksiyonu <b>yeniden baştan çalışır</b> — <code>remember</code> ile tutulan her şey sıfırlanır. Oysa aynı ekranın <code>ViewModel</code>'i (ve ona bağlı <code>filterState</code>) <i>hayatta kalır</i>, çünkü <code>ViewModel</code>'in ömrü composable'ın değil, navigasyon kaydının (<code>NavBackStackEntry</code>) ömrüne bağlıdır.
+      <br><br>
+      <b>İlk (yanlış) düzeltme:</b> Paylaşılan bir "sinyal" (<code>AppContainer</code>'da tutulan, tüketilince null'a çekilen bir state) ile bu bilgiyi aktarmayı denedim — ama tüketme işleminin kendisi yeni bir "sinyal yok" olayı üretip, ekranın az önce doğru okuduğu değeri bu sefer <i>kendi kendine</i> siliyordu.
+      <br><br>
+      <b>Doğru çözüm:</b> Ayrı bir "hangi kategorideyiz" değişkenini tamamen kaldırıp, başlığı doğrudan zaten kalıcı olan veriden <b>türetmek</b>: <code>uiState.filterState.categoryId</code> ile <code>uiState.categories</code> listesinden kategori adını bulmak. Aynı kaynak, filtre çipinde zaten kullanılıyordu — artık başlık da ondan geliyor.
+      <pre><code>// Önce: ayrı, kırılgan bir "hangi kategorideyiz" state'i
+var remember { mutableStateOf&lt;Pair&lt;Long,String&gt;?&gt;(null) }
+
+// Sonra: zaten kalıcı olan ViewModel verisinden türetilmiş
+val activeCategory = uiState.filterState.categoryId
+    ?.let { id -> uiState.categories.firstOrNull { it.id == id } }</code></pre>
+      <div class="term-why"><b>Ders:</b> Bir navigasyon geçişinden (özellikle üstüne yeni ekran açılıp kapanmasından) sağ salim çıkması gereken bilgiyi, ekranın geçici <code>remember</code> state'inde değil, <code>ViewModel</code>'de (ya da ondan türetilebilir bir yerde) tutmak gerekir. "Nereden geldiğimizi hatırlamak için ayrı bir değişken" ihtiyacı duyulduğunda, önce "zaten elimde olan veriden bu çıkarılabilir mi?" diye sormak, yeni bir senkronizasyon sorunu yaratmaktan çok daha sağlam.</div>
+    </div>
+
+    <div class="note">
+      Uçtan uca test edildi (gerçek emülatörde, ADB ile): Kayıt ol (şartlar kutusu dahil, 8 karakter+harf+rakam şifre kuralı) → Giriş yap → kategori ızgarası (kişiselleştirilmiş "Merhaba, {isim}" karşılaması, pastel kare kartlar) → bir kategoriye gir → görev ekle (tarih seçici, kategori/durum/öncelik seçimi, 100 karakterlik başlık sınırı) → kaydet → listede doğru başlıkla görün → uzun basıp görevi sil → uzun basıp kategori silmeyi dene (iptal edildi) → Koyu mod'u aç, tüm ekranları tekrar gez. Hiçbir çökme yaşanmadı; tüm düzeltmeler bu geçişler sırasında bulundu.
+    </div>
+  </section>
+
+  <footer>Görevlerim projesi üzerinden, adım adım. · Mockup'tan gerçek uygulamaya: tasarım yenileme ve birlikte-çalışma dersleri ile devam ediyor.</footer>
 
 </div>
+
+</body></html>

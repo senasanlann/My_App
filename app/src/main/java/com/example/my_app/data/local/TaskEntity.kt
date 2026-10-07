@@ -34,5 +34,8 @@ data class TaskEntity(
     val description: String = "",
     val status: TaskStatus,
     val priority: TaskPriority,
-    val createdAt: Long = System.currentTimeMillis()
+    val createdAt: Long = System.currentTimeMillis(),
+    val updatedAt: Long = System.currentTimeMillis(),
+    val imagePath: String? = null,
+    val dueDate: Long? = null
 )

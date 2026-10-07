@@ -22,5 +22,8 @@ data class CategoryEntity(
     val id: Long = 0,
     val userId: Long,
     val name: String,
-    val isDefault: Boolean = false
+    val isDefault: Boolean = false,
+    val imagePath: String? = null,
+    val emoji: String? = null,
+    val description: String? = null
 )

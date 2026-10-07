@@ -32,7 +32,7 @@ class LoginViewModel(
         val currentState = _uiState.value
 
         val emailError = Validators.validateEmail(currentState.email)
-        val passwordError = if (currentState.password.isBlank()) "Şifre boş olamaz" else null
+        val passwordError = Validators.validateLoginPassword(currentState.password)
 
         _uiState.value = currentState.copy(
             emailError = emailError,

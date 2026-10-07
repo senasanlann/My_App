@@ -11,4 +11,12 @@ class UserRepository(private val userDao: UserDao) {
     suspend fun findByEmail(email: String): UserEntity? {
         return userDao.getUserByEmail(email)
     }
+
+    suspend fun findById(userId: Long): UserEntity? {
+        return userDao.getUserById(userId)
+    }
+
+    suspend fun updateAvatar(userId: Long, path: String?) {
+        userDao.updateAvatarPath(userId, path)
+    }
 }

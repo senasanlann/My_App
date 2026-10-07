@@ -1,3 +1,39 @@
 <resources>
     <string name="app_name">My_App</string>
+
+    <!-- Validators -->
+    <string name="error_name_blank">Ad boş olamaz</string>
+    <string name="error_name_short">Ad en az 2 karakter olmalı</string>
+    <string name="error_email_blank">E-posta boş olamaz</string>
+    <string name="error_email_invalid">Geçerli bir e-posta adresi girin</string>
+    <string name="error_password_blank">Şifre boş olamaz</string>
+    <string name="error_password_short">Şifre en az 8 karakter olmalı</string>
+    <string name="error_password_weak">Şifre en az bir harf ve bir rakam içermeli</string>
+    <string name="error_confirm_password_blank">Şifre tekrarı boş olamaz</string>
+    <string name="error_password_mismatch">Şifreler eşleşmiyor</string>
+    <string name="error_task_title_blank">Başlık boş olamaz</string>
+    <string name="error_task_title_too_long">Başlık en fazla 100 karakter olabilir</string>
+    <string name="error_task_description_too_long">Açıklama en fazla 500 karakter olabilir</string>
+    <string name="error_category_name_blank">Kategori adı boş olamaz</string>
+    <string name="error_category_name_too_long">Kategori adı en fazla 20 karakter olabilir</string>
+
+    <!-- Hints -->
+    <string name="hint_password_min_length">En az 8 karakter, bir harf ve bir rakam.</string>
+
+    <!-- Empty / error states -->
+    <string name="empty_tasks_title">Henüz görev yok</string>
+    <string name="empty_tasks_message">Yeni bir görev eklemek için sağ alttaki + butonuna dokun</string>
+    <string name="empty_search_title">Sonuç bulunamadı</string>
+    <string name="empty_search_message">Arama veya filtre kriterlerine uyan görev yok</string>
+    <string name="action_clear_filters">Filtreleri temizle</string>
+    <string name="action_retry">Tekrar dene</string>
+    <string name="error_generic">Bir şeyler ters gitti</string>
+
+    <!-- Settings -->
+    <string name="settings_section_appearance">Görünüm</string>
+    <string name="settings_section_list">Liste</string>
+    <string name="settings_section_about">Hakkında</string>
+    <string name="settings_dark_theme">Karanlık tema</string>
+    <string name="settings_default_sort">Varsayılan sıralama</string>
+    <string name="settings_app_version">Uygulama sürümü</string>
 </resources>

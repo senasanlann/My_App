@@ -27,9 +27,10 @@ class AuthRepository(
             val newUserId = userDao.insertUser(newUser)
 
             val defaultCategories = listOf(
-                CategoryEntity(userId = newUserId, name = "Genel", isDefault = true),
+                CategoryEntity(userId = newUserId, name = "Ev & Yaşam", isDefault = true),
                 CategoryEntity(userId = newUserId, name = "İş", isDefault = true),
                 CategoryEntity(userId = newUserId, name = "Kişisel", isDefault = true),
+                CategoryEntity(userId = newUserId, name = "Sağlık", isDefault = true),
                 CategoryEntity(userId = newUserId, name = "Alışveriş", isDefault = true)
             )
             categoryDao.insertCategories(defaultCategories)

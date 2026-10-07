@@ -13,5 +13,7 @@ data class UserEntity(
     val id: Long = 0,
     val email: String,
     val name : String,
-    val passwordHash: String
+    val passwordHash: String,
+    val createdAt: Long = System.currentTimeMillis(),
+    val avatarPath: String? = null
 )
